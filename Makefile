@@ -20,4 +20,14 @@ docker_run:
 	docker run -p 8080:8080 -e PORT=8080 --env-file ./src/.env roadtokubernetes.com
 
 docker_stop:
-	docker stop $$(docker ps -q --filter ancestor=roadtokubernetes.com )
+	docker stop $$(docker ps -q --filter ancestor=roadtokubernetes.com)
+
+
+dc_up:
+	docker compose -f docker-compose.dev.yaml up -d
+
+dc_down:
+	docker compose -f docker-compose.dev.yaml down 
+
+dc_clear:
+	docker compose -f docker-compose.dev.yaml  down -v

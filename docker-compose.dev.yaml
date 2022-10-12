@@ -1,0 +1,25 @@
+version: '3.9'
+services:
+    db:
+        image: postgres
+        restart: always
+        ports:
+            - 5832:5432
+        volumes:
+            - postgresdb_data:/var/lib/postgresql/data/
+        environment:
+            - POSTGRES_DB=roadtok8s_db
+            - POSTGRES_USER=roadtok8s_user
+            - POSTGRES_PASSWORD=2ARAggf0-H33mm0e90yZe-Sn5k2oN2sE1flMDCA3hTM
+    redis:
+        image: redis
+        restart: always
+        ports:
+            - 6879:6379
+        volumes:
+            - redis_data:/data
+        entrypoint: redis-server --appendonly yes
+
+volumes:
+    postgresdb_data:
+    redis_data:
