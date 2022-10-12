@@ -1,4 +1,5 @@
 .DS_Store
+.kube/
 
 cdn-local/
 src/static/js/vendor/
