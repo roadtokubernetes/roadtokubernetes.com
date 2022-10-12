@@ -1,0 +1,20 @@
+name: 1 - Run Everything
+
+
+on:
+  workflow_dispatch:
+  # left in for reference only
+  # push:
+  #   branches: [main]
+  # pull_request:
+  #   branches: [main]
+
+jobs:
+  test_django:
+    uses: ./.github/workflows/test-django-mysql.yaml
+  build_container:
+    needs: test_django
+    uses: ./.github/workflows/container.yaml
+    secrets:
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

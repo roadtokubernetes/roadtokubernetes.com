@@ -1,0 +1,57 @@
+{% load compress %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Road to Kubernetes</title>
+    {{ STATIC_URL }}
+    {% compress css file vendor %}
+    <link rel="stylesheet" href="{% static 'vendor/highlight/monokai-sublime.min.css' %}">
+    {% endcompress %}
+
+    {% compress css file roadtok8s %}
+    <link rel="stylesheet" href="{% static 'src/tailwind-output.css' %}"> 
+    {% endcompress %}
+    <script>
+        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+
+</head>
+
+<body class=" dark:bg-gray-800">
+
+    
+    {% include 'base/navbar.html' %}
+    <div class="container mx-auto mt-4 min-h-screen">
+        {% block content %}
+        {% endblock content %}
+
+    
+    </div>
+
+    {% include 'base/footer.html' %}
+     {% compress js file vendor %}
+        <script src="{% static 'vendor/flowbite/flowbite.js' %}" preload></script>
+        <script src="{% static 'vendor/dompurify/purify.min.js' %}" preload></script>
+        <script src="{% static 'vendor/showdown/showdown.min.js' %}" preload></script>
+        <script src="{% static 'vendor/highlight/highlight.min.js' %}" preload></script>
+    {% endcompress %}
+
+
+    {% compress js file roadtok8s %}
+    <script src="{% static 'src/custom.js' %}" defer></script>
+    {% endcompress %}
+     
+</body>
+
+</html>

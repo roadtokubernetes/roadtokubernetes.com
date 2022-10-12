@@ -1,0 +1,10 @@
+Django>=4.1.0,<4.2
+django-allauth
+django-compressor
+gunicorn
+markdown
+python-decouple
+django-storages
+black
+boto
+boto3 
