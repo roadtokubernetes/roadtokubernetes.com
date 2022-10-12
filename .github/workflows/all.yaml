@@ -11,10 +11,10 @@ on:
 
 jobs:
   test_django:
-    uses: ./.github/workflows/test-django-mysql.yaml
+    uses: ./.github/workflows/test-django.yaml
   build_container:
     needs: test_django
-    uses: ./.github/workflows/container.yaml
+    uses: ./.github/workflows/build-container.yaml
     secrets:
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
