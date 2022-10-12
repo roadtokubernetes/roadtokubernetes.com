@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: www-roadtokubernetes-com-deployment
+  namespace: www
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: www-roadtokubernetes-com-deployment
+  template:
+    metadata:
+      labels:
+        app: www-roadtokubernetes-com-deployment
+    spec:
+      containers:
+        - name: www-roadtokubernetes-com-container
+          image: roadtokubernetes/www.roadtokubernetes.com:latest
+          imagePullPolicy: Always
+          envFrom:
+          - secretRef:
+              name: www-roadtokubernetes-com-prod-env
+          env:
+            - name: PORT
+              value: "8000"
+          ports:
+            - name: www-roadtokubernetes-port
+              containerPort: 8000
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: www-roadtokubernetes-port
+            failureThreshold: 1
+            periodSeconds: 10
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: www-roadtokubernetes-port
+            failureThreshold: 30
+            periodSeconds: 10
