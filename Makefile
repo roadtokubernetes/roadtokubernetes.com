@@ -31,3 +31,7 @@ dc_down:
 
 dc_clear:
 	docker compose -f docker-compose.dev.yaml  down -v
+
+
+runserver:
+	python src/manage.py runserver

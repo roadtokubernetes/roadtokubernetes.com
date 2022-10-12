@@ -26,6 +26,7 @@ SECRET_KEY = config('DJANGO_SECRET_KEY', default=None)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
 DEBUG_HOSTNAME = config("DEBUG_HOSTNAME", default=None)
+BASE_URL = config("BASE_URL", default=None)
 
 ALLOWED_HOSTS = []
 ALLOWED_HOST = config("ALLOWED_HOST", default=None)
@@ -40,6 +41,7 @@ if DEBUG and DEBUG_HOSTNAME:
 from .installed import *  # noqa
 
 MIDDLEWARE = [
+    "django_hosts.middleware.HostsRequestMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -47,9 +49,13 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_hosts.middleware.HostsResponseMiddleware"
 ]
 
 ROOT_URLCONF = "cfehome.urls"
+ROOT_HOSTCONF = 'cfehome.hosts'
+DEFAULT_HOST="www"
+DEFAULT_ADMIN_HOST=config("DEFAULT_ADMIN_HOST", default='admin')
 
 TEMPLATES = [
     {

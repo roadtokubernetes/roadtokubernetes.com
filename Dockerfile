@@ -41,6 +41,7 @@ RUN apt-get remove -y --purge make gcc build-essential \
 RUN python3 -m venv /opt/venv && \
     /opt/venv/bin/python -m pip install pip --upgrade && \
     /opt/venv/bin/python -m pip install -r requirements.txt && \
+    chmod +x config/migrate.sh && \
     chmod +x config/entrypoint.sh
 
 
