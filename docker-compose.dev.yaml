@@ -23,3 +23,8 @@ services:
 volumes:
     postgresdb_data:
     redis_data:
+
+networks:
+  default:
+    name: roadtokubernetescom_network
+    # external: true

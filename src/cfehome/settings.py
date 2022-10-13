@@ -164,7 +164,7 @@ if OBJECT_STORAGE_READY:
     AWS_DEFAULT_ACL="public-read"
     AWS_PRELOAD_METADATA = True
     AWS_QUERYSTRING_AUTH = False
-    COMPRESS_OFFLINE = True
+    COMPRESS_OFFLINE = False
     DEFAULT_FILE_STORAGE = 'cfehome.storage.backends.MediaS3BotoStorage'
     # STATICFILES_STORAGE = 'cfehome.storage.backends.PublicS3Boto3Storage'
     STATICFILES_STORAGE = 'cfehome.storage.backends.CachedS3Boto3Storage'

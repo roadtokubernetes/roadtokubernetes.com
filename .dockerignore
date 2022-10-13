@@ -1,7 +1,7 @@
 .DS_Store
 
 src/static/js/vendor/
-
+*.env
 # PYTHON
 # Byte-compiled / optimized / DLL files
 __pycache__/

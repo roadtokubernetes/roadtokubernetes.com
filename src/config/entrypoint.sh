@@ -1,6 +1,6 @@
 #!/bin/bash
 APP_PORT=${PORT:-8000}
-echo "Using port ${APP_PORT}"
+# echo "Using port ${APP_PORT}"
 cd /app/
 
 /opt/venv/bin/python manage.py migrate

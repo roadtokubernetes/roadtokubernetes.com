@@ -17,11 +17,13 @@ docker_build:
 	docker build -t roadtokubernetes.com -f Dockerfile .
 
 docker_run:
-	docker run -p 8080:8080 -e PORT=8080 --env-file ./src/.env roadtokubernetes.com
+	docker run -p 8080:8080 --network roadtokubernetescom_network --env-file ./src/stage.env roadtokubernetes.com
 
 docker_stop:
 	docker stop $$(docker ps -q --filter ancestor=roadtokubernetes.com)
 
+docker_shell:
+	docker exec -it $$(docker ps -q --filter ancestor=roadtokubernetes.com) /bin/bash
 
 dc_up:
 	docker compose -f docker-compose.dev.yaml up -d
