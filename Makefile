@@ -34,6 +34,8 @@ dc_down:
 dc_clear:
 	docker compose -f docker-compose.dev.yaml  down -v
 
-
 runserver:
 	python src/manage.py runserver
+
+k8s_verify:
+	act  -W .github/workflows/k8s-verify.yaml  --secret-file .secrets

@@ -1,0 +1,48 @@
+name: 4 - Apply Kubernetes
+on: 
+  workflow_dispatch:
+
+jobs:
+  k8s_changes:
+    name: Apply K8s Changes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: azure/setup-kubectl@v3
+      - uses: actions/checkout@v1
+      - name: Create/Verify `.kube` directory
+        run: mkdir -p ~/.kube/
+      - name: Create kubectl config
+        run: |
+          cat << EOF >> ~/.kube/kubeconfig.yaml
+          apiVersion: v1
+          clusters:
+          - cluster:
+              certificate-authority-data: ${{ secrets.KUBE_CERTIFICATE }}
+              server: ${{ secrets.KUBE_HOST }}
+            name: ${{ secrets.KUBE_CLUSTER_NAME }}
+          contexts:
+          - context:
+              cluster: ${{ secrets.KUBE_CLUSTER_NAME }}
+              namespace: ${{ secrets.KUBE_NAMESPACE }}
+              user: ${{ secrets.KUBE_USER }}
+            name: ${{ secrets.KUBE_CLUSTER_NAME }}-ctx
+          current-context: ${{ secrets.KUBE_CLUSTER_NAME }}-ctx
+          kind: Config
+          preferences: {}
+          users:
+          - name: ${{ secrets.KUBE_USER }}
+            user:
+              token: ${{ secrets.KUBE_TOKEN }}
+          EOF
+      - name: Apply deployment and service
+        run: |
+          KUBECONFIG=~/.kube/kubeconfig.yaml kubectl apply -f k8s/
+      - name: Update Deployment
+        run: |
+          KUBECONFIG=~/.kube/kubeconfig.yaml kubectl set image \
+          deployment/www-roadtokubernetes-com-deployment \
+          www-roadtokubernetes-com-container=${{ secrets.DOCKERHUB_USERNAME }}/roadtokubernetes.com:latest
+      - name: Perform Deployment rollout
+        run: |
+          KUBECONFIG=~/.kube/kubeconfig.yaml kubectl rollout restart deployment/www-roadtokubernetes-com-deployment
+      

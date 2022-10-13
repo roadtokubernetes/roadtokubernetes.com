@@ -1,0 +1,41 @@
+name: Verify Kubectl Service Account
+on: 
+  workflow_dispatch:
+
+jobs:
+  verify_service_account:
+    name: Verify K8s Service Account
+    runs-on: ubuntu-latest
+    steps:
+      - uses: azure/setup-kubectl@v3
+      - name: Create/Verify `.kube` directory
+        run: mkdir -p ~/.kube/
+      - name: Create kubectl config
+        run: |
+          cat << EOF >> ~/.kube/kubeconfig.yaml
+          apiVersion: v1
+          clusters:
+          - cluster:
+              certificate-authority-data: ${{ secrets.KUBE_CERTIFICATE }}
+              server: ${{ secrets.KUBE_HOST }}
+            name: ${{ secrets.KUBE_CLUSTER_NAME }}
+          contexts:
+          - context:
+              cluster: ${{ secrets.KUBE_CLUSTER_NAME }}
+              namespace: ${{ secrets.KUBE_NAMESPACE }}
+              user: ${{ secrets.KUBE_USER }}
+            name: ${{ secrets.KUBE_CLUSTER_NAME }}-ctx
+          current-context: ${{ secrets.KUBE_CLUSTER_NAME }}-ctx
+          kind: Config
+          preferences: {}
+          users:
+          - name: ${{ secrets.KUBE_USER }}
+            user:
+              token: ${{ secrets.KUBE_TOKEN }}
+          EOF
+      - name: Echo pods
+        run: |
+          KUBECONFIG=~/.kube/kubeconfig.yaml kubectl get pods -n www
+      - name: Echo deployments
+        run: |
+          KUBECONFIG=~/.kube/kubeconfig.yaml kubectl get deployments -n www
