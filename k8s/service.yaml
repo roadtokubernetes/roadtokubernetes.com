@@ -10,6 +10,6 @@ spec:
       protocol: TCP
       port: 80
       # set targetPort from deployment
-      targetPort: www-roadtokubernetes-port
+      targetPort: www-k8s-port
   selector:
     app: www-roadtokubernetes-com-deployment

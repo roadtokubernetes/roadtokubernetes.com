@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: www-roadtokubernetes-com-container
-          image: roadtokubernetes/www.roadtokubernetes.com:latest
+          image: roadtokubernetes/roadtokubernetes.com:latest
           imagePullPolicy: Always
           envFrom:
           - secretRef:
@@ -24,17 +24,17 @@ spec:
             - name: PORT
               value: "8000"
           ports:
-            - name: www-roadtokubernetes-port
+            - name: www-k8s-port
               containerPort: 8000
           livenessProbe:
             httpGet:
               path: /healthz
-              port: www-roadtokubernetes-port
+              port: www-k8s-port
             failureThreshold: 1
             periodSeconds: 10
           startupProbe:
             httpGet:
               path: /healthz
-              port: www-roadtokubernetes-port
+              port: www-k8s-port
             failureThreshold: 30
             periodSeconds: 10
