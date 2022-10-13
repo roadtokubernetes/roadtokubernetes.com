@@ -21,7 +21,7 @@ from . import views
 
 urlpatterns = [
     path("", views.index),
-    path("admin/", admin.site.urls),
-    path('<path:resource>', TemplateView.as_view(template_name='coming-soon.html')),
     path("healthz", views.index),
+    path("admin/", admin.site.urls),
+    path("<path:resource>", TemplateView.as_view(template_name="coming-soon.html")),
 ]

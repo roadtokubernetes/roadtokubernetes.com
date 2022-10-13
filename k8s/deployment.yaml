@@ -26,15 +26,15 @@ spec:
           ports:
             - name: www-k8s-port
               containerPort: 8000
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: www-k8s-port
-            failureThreshold: 1
-            periodSeconds: 10
-          startupProbe:
-            httpGet:
-              path: /healthz
-              port: www-k8s-port
-            failureThreshold: 30
-            periodSeconds: 10
+          # livenessProbe:
+          #   httpGet:
+          #     path: /healthz
+          #     port: www-k8s-port
+          #   failureThreshold: 1
+          #   periodSeconds: 10
+          # startupProbe:
+          #   httpGet:
+          #     path: /healthz
+          #     port: www-k8s-port
+          #   failureThreshold: 30
+          #   periodSeconds: 10
