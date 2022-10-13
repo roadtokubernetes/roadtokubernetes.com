@@ -38,4 +38,15 @@ runserver:
 	python src/manage.py runserver
 
 k8s_verify:
-	act  -W .github/workflows/k8s-verify.yaml  --secret-file .secrets
+	act workflow_dispatch -W .github/workflows/k8s-verify.yaml  --secret-file .secrets
+
+
+k8s_apply:
+	act workflow_dispatch -W .github/workflows/k8s-apply.yaml  --secret-file .secrets
+
+
+act_build_container:
+	act workflow_dispatch -W .github/workflows/build-container.yaml --secret-file .secrets -v
+
+
+# act  workflow_dispatch -W .github/workflows/build-container.yaml  --secret-file .secrets -v
