@@ -32,10 +32,6 @@ RUN apt-get update && \
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
     && locale-gen &&  dpkg-reconfigure locales
 
-# Purge unused
-RUN apt-get remove -y --purge make gcc build-essential \
-    && apt-get autoremove -y \
-    && rm -rf /var/lib/apt/lists/*
 
 # Install Python deps
 RUN python3 -m venv /opt/venv && \
@@ -44,5 +40,9 @@ RUN python3 -m venv /opt/venv && \
     chmod +x config/migrate.sh && \
     chmod +x config/entrypoint.sh
 
+# Purge unused
+RUN apt-get remove -y --purge make gcc build-essential \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/*
 
 CMD [ "./config/entrypoint.sh" ]
