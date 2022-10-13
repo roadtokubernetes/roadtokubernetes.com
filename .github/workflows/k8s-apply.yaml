@@ -34,6 +34,24 @@ jobs:
             user:
               token: ${{ secrets.KUBE_TOKEN }}
           EOF
+      - name: Update deployment secrets
+        run: |
+          cat << EOF >> src/prod.env
+          ALLOWED_HOST=${{ secrets.ALLOWED_HOST }}
+          PORT=${{ secrets.PORT }}
+          BASE_URL=${{ secrets.BASE_URL }}
+          DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }}
+          DEBUG_HOSTNAME=${{ secrets.DEBUG_HOSTNAME }}
+          DEFAULT_ADMIN_HOST=${{ secrets.DEFAULT_ADMIN_HOST }}
+          LINODE_BUCKET=${{ secrets.LINODE_BUCKET }}
+          LINODE_BUCKET_REGION=${{ secrets.LINODE_BUCKET_REGION }}
+          LINODE_BUCKET_ACCESS_KEY=${{ secrets.LINODE_BUCKET_ACCESS_KEY }}
+          LINODE_BUCKET_SECRET_KEY=${{ secrets.LINODE_BUCKET_SECRET_KEY }}
+          USE_REMOTE_STATIC=${{ secrets.USE_REMOTE_STATIC }}
+          EOF
+          KUBECONFIG=~/.kube/kubeconfig.yaml kubectl delete secret www-roadtokubernetes-com-prod-env --ignore-not-found
+          KUBECONFIG=~/.kube/kubeconfig.yaml kubectl create secret generic www-roadtokubernetes-com-prod-env --from-env-file=src/prod.env
       - name: Apply deployment and service
         run: |
           KUBECONFIG=~/.kube/kubeconfig.yaml kubectl apply -f k8s/

@@ -39,3 +39,9 @@ jobs:
       - name: Echo deployments
         run: |
           KUBECONFIG=~/.kube/kubeconfig.yaml kubectl get deployments -n www
+      - name: Echo services
+        run: |
+          KUBECONFIG=~/.kube/kubeconfig.yaml kubectl get services -n www
+      - name: Echo ingresses
+        run: |
+          KUBECONFIG=~/.kube/kubeconfig.yaml kubectl get ingresses -n www

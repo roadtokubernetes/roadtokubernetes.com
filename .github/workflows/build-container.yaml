@@ -1,9 +1,9 @@
 name: 3 - Build & Push Docker Container
 
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   workflow_call:
     secrets:
       DOCKERHUB_USERNAME:
