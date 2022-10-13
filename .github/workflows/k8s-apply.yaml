@@ -38,11 +38,9 @@ jobs:
         run: |
           cat << EOF >> src/prod.env
           ALLOWED_HOST=${{ secrets.ALLOWED_HOST }}
-          PORT=${{ secrets.PORT }}
           BASE_URL=${{ secrets.BASE_URL }}
           DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
           DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }}
-          DEBUG_HOSTNAME=${{ secrets.DEBUG_HOSTNAME }}
           DEFAULT_ADMIN_HOST=${{ secrets.DEFAULT_ADMIN_HOST }}
           LINODE_BUCKET=${{ secrets.LINODE_BUCKET }}
           LINODE_BUCKET_REGION=${{ secrets.LINODE_BUCKET_REGION }}
