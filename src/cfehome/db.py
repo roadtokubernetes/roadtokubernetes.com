@@ -1,6 +1,6 @@
 from decouple import config
 
-DJANGO_DEBUG = config("DJANGO_DEBUG", default=False)
+DJANGO_DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
 POSTGRES_USER = config("POSTGRES_USER", default=None)
 POSTGRES_PASSWORD = config("POSTGRES_PASSWORD", default=None)
 POSTGRES_DB = config("POSTGRES_DB", default=None)
