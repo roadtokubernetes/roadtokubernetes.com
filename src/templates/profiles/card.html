@@ -1,0 +1,16 @@
+{% if profile %}
+<address class="flex items-center mb-6 not-italic">
+    <div class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
+        {% if profile and profile.image %}
+            <img class="mr-4 w-16 h-16 rounded-full" src="{{ profile.image.url }}" alt="{{ profile.get_full_name }}">
+        {% endif %}
+        <div>
+            <a href="{{ profile.get_absolute_url }}" rel="author" class="text-xl font-bold text-gray-900 dark:text-white">{{ profile.get_full_name }}</a>
+            {% if include_title and profile.title %}
+            <p class="text-base font-light text-gray-500 dark:text-gray-400">{{ profile.title }}</p>
+            {% endif %}
+            
+        </div>
+    </div>
+</address>
+{% endif %}

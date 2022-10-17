@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+
+{% block head_title %}
+{% if title %}{{ title }} | {% endif %}Articles | {{ block.super }}
+{% endblock head_title %}
+
+{% block content %}
+{% include 'articles/article_breadcrumbs.html' with article=article query=query %}
+
+
+{% if not hide_title %}
+<section>
+    <div class="grid px-4">
+        <div class="mx-auto text-center place-self-center col-span-6 lg:col-span-7">
+            <h1 class="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
+                {% if title %}{{ title }}{% else %}Road to K8s Blog{% endif %}</h1>
+        </div>            
+    </div>
+</section>
+{% endif %}
+
+
+{% if query %}
+<section>
+    <div class="flex px-4 ">
+        <div class="mx-auto text-center place-self-center col-span-8 lg:col-span-7 mb-5">
+            <p>Results for: <span class='  border-b-stone-600 border-b-2'>{{ query }}</span></p>
+        </div>            
+    </div>
+</section>
+{% endif %}
+
+
+<section>
+    <div class="flex items-stretch">
+        <div class="col-span-11 lg:col-span-8 mx-auto justify-center justify-self-center">
+            {% for object in object_list %}
+                {% include 'articles/article_card_v.html' with article=object %}
+
+            {% empty %}
+             {% if query %} 
+                <p class="py-8"> No posts found for <b>{{ query }}</b>. </p>
+             {% else %}
+                <p> Articles coming soon. </p>
+             {% endif %}
+            {% endfor %}
+        </div>
+        <div class="col-span-12 lg:col-span-2 ml-auto hidden">
+            <h1>Hello World</h1>
+        </div>
+    </div>
+</section>
+ 
+{% endblock content %}

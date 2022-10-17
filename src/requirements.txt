@@ -10,3 +10,5 @@ boto
 boto3 
 psycopg2
 django-hosts
+pillow
+django-admin-rangefilter

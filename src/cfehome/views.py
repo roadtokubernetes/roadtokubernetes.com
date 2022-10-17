@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 
 def index(request):
-    title="Road to Kubernetes"
+    title = "Should we use Kubernetes?"
     content = """
 ## Coming Soon
 
@@ -21,8 +21,5 @@ metadata:
 kubectl apply -f k8s/hello-world.yaml
 ```
     """
-    context = {
-        "title": title,
-        "content":  content
-    }
-    return render(request, 'index.html', context)
+    context = {"title": title, "content": content}
+    return render(request, "index.html", context)

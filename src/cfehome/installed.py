@@ -5,6 +5,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'compressor',
-    'django_hosts'
+    # third party
+    "compressor",
+    "django_hosts",
+    "rangefilter",
+    # internal
+    "articles",
+    "profiles",
 ]

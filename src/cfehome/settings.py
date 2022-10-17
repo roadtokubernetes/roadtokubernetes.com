@@ -22,16 +22,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('DJANGO_SECRET_KEY', default=None) 
+SECRET_KEY = config("DJANGO_SECRET_KEY", default=None)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
 DEBUG_HOSTNAME = config("DEBUG_HOSTNAME", default=None)
+PARENT_HOST = config("PARENT_HOST", default=None)
 BASE_URL = config("BASE_URL", default=None)
 
 ALLOWED_HOSTS = []
 ALLOWED_HOST = config("ALLOWED_HOST", default=None)
 if ALLOWED_HOST is not None:
     ALLOWED_HOSTS.append(ALLOWED_HOST)
+if PARENT_HOST is not None:
+    ALLOWED_HOSTS.append(PARENT_HOST)
 if DEBUG and DEBUG_HOSTNAME:
     ALLOWED_HOSTS.append(DEBUG_HOSTNAME)
 
@@ -49,13 +52,14 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django_hosts.middleware.HostsResponseMiddleware"
+    "django_hosts.middleware.HostsResponseMiddleware",
 ]
 
 ROOT_URLCONF = "cfehome.urls"
-ROOT_HOSTCONF = 'cfehome.hosts'
-DEFAULT_HOST="www"
-DEFAULT_ADMIN_HOST=config("DEFAULT_ADMIN_HOST", default='admin')
+ROOT_HOSTCONF = "cfehome.hosts"
+DEFAULT_HOST = "www"
+DEFAULT_ADMIN_HOST = config("DEFAULT_ADMIN_HOST", default="admin")
+
 
 TEMPLATES = [
     {
@@ -123,10 +127,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
+MEDIA_URL = "media/"
 
-STATICFILES_DIRS = [BASE_DIR / 'static']
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
-COMPRESS_ROOT = BASE_DIR / 'static'
+COMPRESS_ROOT = BASE_DIR / "static"
 COMPRESS_OUTPUT_DIR = "min"
 COMPRESS_ENABLED = True
 
@@ -134,26 +139,36 @@ COMPRESS_ENABLED = True
 # COMPRESS_URL = "http://compressor-test.s3.amazonaws.com/"
 # COMPRESS_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-STATICFILES_FINDERS = ('django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',)
-STATIC_ROOT = BASE_DIR.parent / "cdn-local"
-
+STATICFILES_FINDERS = (
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "compressor.finders.CompressorFinder",
+)
+STATIC_ROOT = BASE_DIR.parent / "cdn-local" / "static"
+MEDIA_ROOT = BASE_DIR.parent / "cdn-local" / "media"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-LINODE_BUCKET=config('LINODE_BUCKET', default=None)
-LINODE_BUCKET_REGION=config('LINODE_BUCKET_REGION', default=None)
-LINODE_BUCKET_ACCESS_KEY=config('LINODE_BUCKET_ACCESS_KEY', default=None) 
-LINODE_BUCKET_SECRET_KEY=config('LINODE_BUCKET_SECRET_KEY', default=None) 
-USE_REMOTE_STATIC=config('USE_REMOTE_STATIC', cast=bool, default=True)
-OBJECT_STORAGE_READY = all([USE_REMOTE_STATIC, LINODE_BUCKET,LINODE_BUCKET_REGION, LINODE_BUCKET_ACCESS_KEY, LINODE_BUCKET_SECRET_KEY])
+LINODE_BUCKET = config("LINODE_BUCKET", default=None)
+LINODE_BUCKET_REGION = config("LINODE_BUCKET_REGION", default=None)
+LINODE_BUCKET_ACCESS_KEY = config("LINODE_BUCKET_ACCESS_KEY", default=None)
+LINODE_BUCKET_SECRET_KEY = config("LINODE_BUCKET_SECRET_KEY", default=None)
+USE_REMOTE_STATIC = config("USE_REMOTE_STATIC", cast=bool, default=True)
+OBJECT_STORAGE_READY = all(
+    [
+        USE_REMOTE_STATIC,
+        LINODE_BUCKET,
+        LINODE_BUCKET_REGION,
+        LINODE_BUCKET_ACCESS_KEY,
+        LINODE_BUCKET_SECRET_KEY,
+    ]
+)
 
 if OBJECT_STORAGE_READY:
-    S3_USE_SIGV4 =True
+    S3_USE_SIGV4 = True
     AWS_S3_SIGNATURE_VERSION = "s3v4"
     AWS_S3_ENDPOINT_URL = f"https://{LINODE_BUCKET_REGION}.linodeobjects.com"
     AWS_ACCESS_KEY_ID = LINODE_BUCKET_ACCESS_KEY
@@ -161,15 +176,38 @@ if OBJECT_STORAGE_READY:
     AWS_S3_REGION_NAME = LINODE_BUCKET_REGION
     AWS_S3_USE_SSL = True
     AWS_STORAGE_BUCKET_NAME = LINODE_BUCKET
-    AWS_DEFAULT_ACL="public-read"
+    AWS_DEFAULT_ACL = "public-read"
     AWS_PRELOAD_METADATA = True
     AWS_QUERYSTRING_AUTH = False
     COMPRESS_OFFLINE = False
-    DEFAULT_FILE_STORAGE = 'cfehome.storage.backends.MediaS3BotoStorage'
+    DEFAULT_FILE_STORAGE = "cfehome.storage.backends.MediaS3BotoStorage"
     # STATICFILES_STORAGE = 'cfehome.storage.backends.PublicS3Boto3Storage'
-    STATICFILES_STORAGE = 'cfehome.storage.backends.CachedS3Boto3Storage'
-    STATIC_URL= f'https://{LINODE_BUCKET_REGION}.linodeobjects.com/'
-    COMPRESS_URL = f'https://{LINODE_BUCKET_REGION}.linodeobjects.com/{LINODE_BUCKET}/'
-    COMPRESS_STORAGE =  STATICFILES_STORAGE # 'storages.backends.s3boto3.S3Boto3Storage'
-    COMPRESS_ROOT = STATIC_ROOT 
-    COMPRESS_OFFLINE_CONTEXT = {'STATIC_URL': "/static/"}
+    STATICFILES_STORAGE = "cfehome.storage.backends.CachedS3Boto3Storage"
+    STATIC_URL = f"https://{LINODE_BUCKET_REGION}.linodeobjects.com/"
+    COMPRESS_URL = f"https://{LINODE_BUCKET_REGION}.linodeobjects.com/{LINODE_BUCKET}/"
+    COMPRESS_STORAGE = STATICFILES_STORAGE  # 'storages.backends.s3boto3.S3Boto3Storage'
+    COMPRESS_ROOT = STATIC_ROOT
+    COMPRESS_OFFLINE_CONTEXT = {"STATIC_URL": "/static/"}
+
+
+# CORS_REPLACE_HTTPS_REFERRER      = False
+HOST_SCHEME = "http://"
+SECURE_PROXY_SSL_HEADER = None
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+SECURE_HSTS_SECONDS = None
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_FRAME_DENY = False
+
+
+if not DEBUG:
+    # CORS_REPLACE_HTTPS_REFERER      = True
+    HOST_SCHEME = "https://"
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_SECONDS = 1000000
+    SECURE_FRAME_DENY = True
