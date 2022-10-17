@@ -19,7 +19,9 @@ jobs:
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
   apply_k8s:
-    needs: test_django
+    needs: 
+      - test_django
+      - build_container
     uses: ./.github/workflows/k8s-apply.yaml
     secrets:
         KUBE_HOST: ${{ secrets.KUBE_HOST }}
