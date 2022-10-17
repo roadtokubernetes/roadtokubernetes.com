@@ -11,5 +11,6 @@ INSTALLED_APPS = [
     "rangefilter",
     # internal
     "articles",
+    "console",
     "profiles",
 ]

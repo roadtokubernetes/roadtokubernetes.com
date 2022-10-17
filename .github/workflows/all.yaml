@@ -36,6 +36,7 @@ jobs:
         DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
         PARENT_HOST: ${{ secrets.PARENT_HOST }}
+        SESSION_DOMAIN: ${{ secrets.SESSION_DOMAIN }}
         DEFAULT_ADMIN_HOST: ${{ secrets.DEFAULT_ADMIN_HOST }}
         LINODE_BUCKET: ${{ secrets.LINODE_BUCKET }}
         LINODE_BUCKET_REGION: ${{ secrets.LINODE_BUCKET_REGION }}
