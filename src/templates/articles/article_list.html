@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 
 
-{% block head_title %}
-{% if title %}{{ title }} | {% endif %}Articles | {{ block.super }}
-{% endblock head_title %}
+{% block meta %}
+   <meta name="description" content="Official blog for the Road to Kubernetes community. Learn when and why you should use Kubernetes or not and that's the point.">
+{% endblock %}
+
+{% block head_title %}{{ title }} | roadtokubernetes.com{% endblock head_title %}
+
 
 {% block content %}
 {% include 'articles/article_breadcrumbs.html' with article=article query=query %}

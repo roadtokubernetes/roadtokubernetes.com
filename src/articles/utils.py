@@ -6,6 +6,9 @@ import uuid
 from django.utils.text import slugify
 
 
+def strip_string_formatting(txt):
+    return " ".join(txt.split())
+
 def get_article_image_upload_to(instance, filename):
     fpath = pathlib.Path(filename)
     # fname = f"{uuid.uuid1()}{fpath.suffix}"

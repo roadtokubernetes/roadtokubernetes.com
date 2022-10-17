@@ -29,6 +29,13 @@ class ArticleListView(generic.ListView):
 class ArticleDetailView(generic.DetailView):
     queryset = Article.objects.published()
 
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        obj =  context['object']
+        if obj.user:
+            context['author_profile'] = obj.user.profile
+        return context
+
 
 class SearchView(generic.ListView):
     queryset = Article.objects.published()

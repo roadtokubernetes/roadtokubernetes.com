@@ -1,15 +1,14 @@
 {% extends "base.html" %}
 
 
-{% block head_title %}
-{{ article.title }} | Articles | {{ block.super }}
-{% endblock head_title %}
+{% block meta %}
+   <meta name="description" content="{{ article.get_meta_description }}">
+   {% if author_profile and author_profile.name %}<meta name="author" content="{{ author_profile.name }}">{% endif %}
+{% endblock %}
+
+{% block head_title %}{{ article.title }} | roadtokubernetes.com{% endblock head_title %}
 
 {% block content %}
-{% with article.user.profile as author_profile %}
-
-
-
 {% include 'articles/article_breadcrumbs.html' with article=article %}
 
 <div class="flex mx-auto">
@@ -89,7 +88,5 @@
  
 </div>
  
-  
-  
-   {% endwith %}
+
 {% endblock content %}

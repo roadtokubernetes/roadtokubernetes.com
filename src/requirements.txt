@@ -12,3 +12,4 @@ psycopg2
 django-hosts
 pillow
 django-admin-rangefilter
+markdown

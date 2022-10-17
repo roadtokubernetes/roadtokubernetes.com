@@ -17,16 +17,17 @@ from articles import views as articles_views
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
-from django.views.generic import TemplateView
+from django.views.generic import RedirectView, TemplateView
 
 from . import views
 
 urlpatterns = [
     path("", views.index),
+    path("blog", RedirectView.as_view(url='/blog/')),
     path("blog/", include("articles.urls")),
+    path("search", RedirectView.as_view(url='/search/')),
     path("search/", articles_views.SearchView.as_view()),
     path("u/", include("profiles.urls")),
-    path("healthz", views.index),
     path("admin/", admin.site.urls),
 ]
 
@@ -37,5 +38,6 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += [
+    path("healthz", views.index),
     path("<path:resource>", TemplateView.as_view(template_name="coming-soon.html")),
 ]

@@ -1,8 +1,11 @@
+import markdown
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
+from django.template.defaultfilters import truncatechars
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.html import strip_tags
 
 from . import utils
 
@@ -61,6 +64,9 @@ class Article(models.Model):
     title = models.CharField(max_length=120)
     slug = models.SlugField(blank=True, null=True)
     content = models.TextField(blank=True, null=True)
+    summary = models.CharField(max_length=220, blank=True, null=True)
+    meta_description = models.TextField(blank=True, null=True)
+    meta_title = models.CharField(max_length=120, blank=True, null=True)
     image = models.ImageField(
         upload_to=utils.get_article_image_upload_to, null=True, blank=True
     )
@@ -98,6 +104,9 @@ class Article(models.Model):
         if not self.image:
             return None
         return self.image.url
+
+    def get_meta_description(self):
+        return self.meta_description if self.meta_description else self.title
     
     @property
     def author(self):
@@ -129,4 +138,16 @@ class Article(models.Model):
             """
             if not self.publish_timestamp:
                 self.publish_timestamp = timezone.now()
+        if self.content and not self.summary:
+            content_marked = markdown.markdown(self.content)
+            content_stripped = strip_tags(content_marked)
+            content_trunc = truncatechars(content_stripped, 220)
+            self.summary = utils.strip_string_formatting(content_trunc)
+        if self.content and not self.meta_description:
+            content_marked = markdown.markdown(self.content)
+            content_stripped = strip_tags(content_marked)
+            meta_description_trunc = truncatechars(content_stripped, 160)
+            self.meta_description = utils.strip_string_formatting(meta_description_trunc)
+        if self.title and not self.meta_title:
+            self.meta_title = truncatechars(self.title, 160)
         super().save(*args, **kwargs)
