@@ -20,6 +20,8 @@ spec:
           envFrom:
           - secretRef:
               name: www-roadtokubernetes-com-prod-env
+          - secretRef:
+              name: postgres-roadtok8s-db-secret
           env:
             - name: PORT
               value: "8000"

@@ -50,3 +50,13 @@ act_build_container:
 
 
 # act  workflow_dispatch -W .github/workflows/build-container.yaml  --secret-file .secrets -v
+
+
+
+# does not work locally
+act_db_init_test:
+	echo ".github/workflows/db-init-test.yaml will not run locally with act"
+	act workflow_dispatch -W .github/workflows/db-init-test.yaml --secret-file .secrets 
+
+
+# act workflow_dispatch -W .github/workflows/db-init-test.yaml --secret-file .secrets 

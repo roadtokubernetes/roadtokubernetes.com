@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: psql  # Sets Deployment name
+  namespace: www
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: psql
+  template:
+    metadata:
+      labels:
+        app: psql
+    spec:
+      containers:
+        - name: psql
+          image: roadtokubernetes/psql:12 # Sets Image
+          imagePullPolicy: "IfNotPresent"
+          command: [ "/bin/sh", "-c", "--" ]
+          args: [ "while true; do sleep 30; done;" ]
+          envFrom:
+            - secretRef:
+                name: postgres-roadtok8s-db-secret
+
+# psql -h postgres.www.svc.cluster.local -U roadtokubernetes_user -d roadtokubernetes_db

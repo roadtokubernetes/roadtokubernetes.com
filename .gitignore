@@ -4,6 +4,7 @@
 
 cdn-local/
 src/static/js/vendor/
+src/static/min/
 *.env
 # PYTHON
 # Byte-compiled / optimized / DLL files
