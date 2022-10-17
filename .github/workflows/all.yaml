@@ -48,3 +48,9 @@ jobs:
         POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
         POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
         POSTGRES_DB_REQUIRE_SSL: ${{ secrets.POSTGRES_DB_REQUIRE_SSL }}
+        EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+        EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
+        EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
+        DEFAULT_FROM_EMAIL: ${{ secrets.DEFAULT_FROM_EMAIL }}
+        SERVER_EMAIL: ${{ secrets.SERVER_EMAIL }}
+        MANAGER_EMAIL: ${{ secrets.MANAGER_EMAIL }}
