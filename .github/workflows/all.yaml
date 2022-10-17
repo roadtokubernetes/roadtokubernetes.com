@@ -18,3 +18,31 @@ jobs:
     secrets:
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  apply_k8s:
+    needs: test_django
+    uses: ./.github/workflows/k8s-apply.yaml
+    secrets:
+        KUBE_HOST: ${{ secrets.KUBE_HOST }}
+        KUBE_CERTIFICATE: ${{ secrets.KUBE_CERTIFICATE }}
+        KUBE_CLUSTER_NAME: ${{ secrets.KUBE_CLUSTER_NAME }}
+        KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
+        KUBE_USER: ${{ secrets.KUBE_USER }}
+        KUBE_TOKEN:  ${{ secrets.KUBE_TOKEN }}
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        ALLOWED_HOST: ${{ secrets.ALLOWED_HOST }}
+        BASE_URL: ${{ secrets.BASE_URL }}
+        DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+        DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
+        PARENT_HOST: ${{ secrets.PARENT_HOST }}
+        DEFAULT_ADMIN_HOST: ${{ secrets.DEFAULT_ADMIN_HOST }}
+        LINODE_BUCKET: ${{ secrets.LINODE_BUCKET }}
+        LINODE_BUCKET_REGION: ${{ secrets.LINODE_BUCKET_REGION }}
+        LINODE_BUCKET_ACCESS_KEY: ${{ secrets.LINODE_BUCKET_ACCESS_KEY }}
+        LINODE_BUCKET_SECRET_KEY: ${{ secrets.LINODE_BUCKET_SECRET_KEY }}
+        USE_REMOTE_STATIC: ${{ secrets.USE_REMOTE_STATIC }}
+        POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+        POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+        POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+        POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+        POSTGRES_DB_REQUIRE_SSL: ${{ secrets.POSTGRES_DB_REQUIRE_SSL }}

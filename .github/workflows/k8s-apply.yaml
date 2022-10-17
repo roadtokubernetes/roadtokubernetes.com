@@ -1,6 +1,56 @@
 name: 4 - Apply Kubernetes
 on: 
   workflow_dispatch:
+  workflow_call:
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      KUBE_HOST:
+        required: true
+      KUBE_CERTIFICATE:
+        required: true
+      KUBE_CLUSTER_NAME:
+        required: true
+      KUBE_NAMESPACE:
+        required: true
+      KUBE_USER:
+        required: true
+      KUBE_TOKEN: 
+        required: true
+      ALLOWED_HOST: 
+        required: true
+      BASE_URL: 
+        required: true
+      DJANGO_SECRET_KEY: 
+        required: true
+      DJANGO_DEBUG: 
+        required: true
+      PARENT_HOST: 
+        required: true
+      DEFAULT_ADMIN_HOST: 
+        required: true
+      LINODE_BUCKET: 
+        required: true
+      LINODE_BUCKET_REGION: 
+        required: true
+      LINODE_BUCKET_ACCESS_KEY: 
+        required: true
+      LINODE_BUCKET_SECRET_KEY: 
+        required: true
+      USE_REMOTE_STATIC: 
+        required: true
+      POSTGRES_DB: 
+        required: true
+      POSTGRES_USER: 
+        required: true
+      POSTGRES_PASSWORD: 
+        required: true
+      POSTGRES_HOST: 
+        required: true
+      POSTGRES_PORT: 
+        required: true
+      POSTGRES_DB_REQUIRE_SSL: 
+        required: true
 
 jobs:
   k8s_changes:
