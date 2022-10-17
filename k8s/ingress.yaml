@@ -16,11 +16,22 @@ spec:
   tls:
     - hosts:
       - www.roadtokubernetes.com
+      - console.roadtokubernetes.com
       - a.roadtokubernetes.com
       - roadtokubernetes.com
       secretName: tls-www-roadtokubernetes
   rules:
   - host: www.roadtokubernetes.com
+    http:
+      paths:
+      - backend:
+          service: 
+            name: www-roadtokubernetes-com-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: console.roadtokubernetes.com
     http:
       paths:
       - backend:
