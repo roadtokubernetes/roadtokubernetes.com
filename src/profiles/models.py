@@ -11,7 +11,7 @@ User = settings.AUTH_USER_MODEL
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(
-        upload_to=utils.get_profile_image_upload_to, blank=True, null=True
+        upload_to=utils.get_profile_image_upload_to, blank=True, null=True, storage=utils.get_profile_storage
     )
     title = models.CharField(max_length=120, null=True, blank=True)
     description = models.TextField(blank=True, null=True)

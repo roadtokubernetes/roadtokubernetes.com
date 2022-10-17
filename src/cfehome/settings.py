@@ -159,15 +159,17 @@ LINODE_BUCKET_SECRET_KEY = config("LINODE_BUCKET_SECRET_KEY", default=None)
 USE_REMOTE_STATIC = config("USE_REMOTE_STATIC", cast=bool, default=True)
 OBJECT_STORAGE_READY = all(
     [
-        USE_REMOTE_STATIC,
         LINODE_BUCKET,
         LINODE_BUCKET_REGION,
         LINODE_BUCKET_ACCESS_KEY,
         LINODE_BUCKET_SECRET_KEY,
     ]
 )
-
 if OBJECT_STORAGE_READY:
+    """
+    Ability to use various django-storage classes
+    without USE_REMOTE_STATIC being true.
+    """
     S3_USE_SIGV4 = True
     AWS_S3_SIGNATURE_VERSION = "s3v4"
     AWS_S3_ENDPOINT_URL = f"https://{LINODE_BUCKET_REGION}.linodeobjects.com"
@@ -179,15 +181,19 @@ if OBJECT_STORAGE_READY:
     AWS_DEFAULT_ACL = "public-read"
     AWS_PRELOAD_METADATA = True
     AWS_QUERYSTRING_AUTH = False
-    COMPRESS_OFFLINE = False
-    DEFAULT_FILE_STORAGE = "cfehome.storage.backends.MediaS3BotoStorage"
-    # STATICFILES_STORAGE = 'cfehome.storage.backends.PublicS3Boto3Storage'
-    STATICFILES_STORAGE = "cfehome.storage.backends.CachedS3Boto3Storage"
-    STATIC_URL = f"https://{LINODE_BUCKET_REGION}.linodeobjects.com/"
-    COMPRESS_URL = f"https://{LINODE_BUCKET_REGION}.linodeobjects.com/{LINODE_BUCKET}/"
-    COMPRESS_STORAGE = STATICFILES_STORAGE  # 'storages.backends.s3boto3.S3Boto3Storage'
-    COMPRESS_ROOT = STATIC_ROOT
-    COMPRESS_OFFLINE_CONTEXT = {"STATIC_URL": "/static/"}
+
+    if USE_REMOTE_STATIC:
+        """
+        use object storage for all static files
+        """
+        COMPRESS_OFFLINE = False
+        DEFAULT_FILE_STORAGE = "cfehome.storage.backends.MediaPrivateS3BotoStorage"
+        STATICFILES_STORAGE = "cfehome.storage.backends.CachedS3Boto3Storage"
+        STATIC_URL = f"https://{LINODE_BUCKET_REGION}.linodeobjects.com/"
+        COMPRESS_URL = f"https://{LINODE_BUCKET_REGION}.linodeobjects.com/{LINODE_BUCKET}/"
+        COMPRESS_STORAGE = STATICFILES_STORAGE  # 'storages.backends.s3boto3.S3Boto3Storage'
+        COMPRESS_ROOT = STATIC_ROOT
+        COMPRESS_OFFLINE_CONTEXT = {"STATIC_URL": "/static/"}
 
 
 # CORS_REPLACE_HTTPS_REFERRER      = False

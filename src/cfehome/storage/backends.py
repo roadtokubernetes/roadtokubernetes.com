@@ -4,12 +4,26 @@ from storages.backends.s3boto3 import S3Boto3Storage
 from . import mixins
 
 
-class PublicS3Boto3Storage(mixins.DefaultACLMixin, S3Boto3Storage):
+class StaticPublicS3Boto3Storage(mixins.DefaultACLMixin, S3Boto3Storage):
+    """
+    Not in use
+    """
     location = 'static'
     default_acl = 'public-read'
 
 
-class MediaS3BotoStorage(mixins.DefaultACLMixin, S3Boto3Storage):
+class MediaPublicS3BotoStorage(mixins.DefaultACLMixin, S3Boto3Storage):
+    """"
+    For user public uploads
+    """
+    location = 'public'
+    default_acl = 'public-read'
+
+
+class MediaPrivateS3BotoStorage(mixins.DefaultACLMixin, S3Boto3Storage):
+    """"
+    For user private uploads
+    """
     location = 'media'
     default_acl = 'private'
 
