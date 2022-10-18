@@ -72,6 +72,7 @@ MIDDLEWARE = [
     "django_hosts.middleware.HostsResponseMiddleware",
 ]
 
+APPEND_SLASH= True
 ROOT_URLCONF = "cfehome.urls"
 ROOT_HOSTCONF = "cfehome.hosts"
 DEFAULT_HOST = "www"
@@ -89,6 +90,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "console.context_processors.console_url",
             ],
         },
     },
@@ -112,6 +114,8 @@ from .db import *  # noqa
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
+
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -127,6 +131,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+] 
+
+SITE_ID = 1
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
@@ -148,9 +160,14 @@ MEDIA_URL = "media/"
 
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+CRISPY_TEMPLATE_PACK = "tailwind"
+
 COMPRESS_ROOT = BASE_DIR / "static"
 COMPRESS_OUTPUT_DIR = "min"
 COMPRESS_ENABLED = True
+
+
 
 # https://django-compressor.readthedocs.io/en/stable/remote-storages.html#django-storages
 # COMPRESS_URL = "http://compressor-test.s3.amazonaws.com/"
@@ -235,3 +252,12 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_SECONDS = 1000000
     SECURE_FRAME_DENY = True
+
+
+LOGIN_URL = '/account/login'
+CONSOLE_URL = ""
+if PARENT_HOST:
+    LOGIN_URL = f'{HOST_SCHEME}www.{PARENT_HOST}/login'
+    CONSOLE_URL = f'{HOST_SCHEME}console.{PARENT_HOST}'
+    LOGIN_REDIRECT_URL = CONSOLE_URL
+    LOGOUT_REDIRECT_URL = LOGIN_URL

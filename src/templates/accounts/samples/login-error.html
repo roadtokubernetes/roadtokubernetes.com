@@ -1,0 +1,12 @@
+<form class="space-y-4 md:space-y-6" method="POST" action="/accounts/login/"><input type="hidden" name="csrfmiddlewaretoken" value="B8KK8mHyB3bIjMM5CvOI0ZTwSDXipfJlhEHKw58IVvdnoYDpiADWq1LZRr30BK6j">
+
+
+    <div class="alert mb-4"> <div class="border border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700"> <ul> <li>The username and/or password you specified are not correct.</li> </ul> </div> <div class="border border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700"> <ul> <li>The username and/or password you specified are not correct.</li> </ul> </div></div> <div id="div_id_login" class="mb-3"> <label for="id_login" class="block text-gray-700 text-sm font-bold mb-2">
+                Username<span class="asteriskField">*</span> </label> <input type="text" name="login" value="asdf" placeholder="Username" autocomplete="username" maxlength="150" class="textinput w-full appearance-none border-gray-300 py-2 leading-normal px-4 block text-gray-700 bg-white focus:outline-none border rounded-lg" required="" id="id_login"> </div> <div id="div_id_password" class="mb-3"> <label for="id_password" class="block text-gray-700 text-sm font-bold mb-2">
+                Password<span class="asteriskField">*</span> </label> <input type="password" name="password" placeholder="Password" autocomplete="current-password" class="passwordinput w-full appearance-none border-gray-300 py-2 leading-normal px-4 block text-gray-700 bg-white focus:outline-none border rounded-lg" required="" id="id_password"> </div> <div id="div_id_remember" class="mb-3"> <label for="id_remember" class="block text-gray-700 text-sm font-bold mb-2">
+                Remember Me
+            </label> <input type="checkbox" name="remember" class="checkboxinput " id="id_remember"> </div>
+    
+    <button type="submit" class="w-full text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800">Login</button>
+                      
+    </form>

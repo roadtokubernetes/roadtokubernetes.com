@@ -16,18 +16,31 @@ Including another URLconf
 from articles import views as articles_views
 from django.conf import settings
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.views.generic import RedirectView, TemplateView
 
 from . import views
 
 urlpatterns = [
     path("", views.index),
+    re_path(r"^signup/?", RedirectView.as_view(url="/account/signup/")),
+    re_path(r"^sign-up/?", RedirectView.as_view(url="/account/signup/")),
+    re_path(r"^join/?", RedirectView.as_view(url="/account/signup/")),
+    re_path(r"^signin/?", RedirectView.as_view(url="/account/login/")),
+    re_path(r"^sign-in/?", RedirectView.as_view(url="/account/login/")),
+    re_path(r"^login/?", RedirectView.as_view(url="/account/login/")),
+    re_path(r"^logout/?", RedirectView.as_view(url="/account/logout/")),
+    path('account/', include('allauth.urls')),
     path("blog", RedirectView.as_view(url='/blog/')),
     path("blog/", include("articles.urls")),
     path("search", RedirectView.as_view(url='/search/')),
     path("search/", articles_views.SearchView.as_view()),
     path("u/", include("profiles.urls")),
+    path("about/", TemplateView.as_view(template_name="coming-soon.html")),
+    path("contact/", TemplateView.as_view(template_name="coming-soon.html")),
+    path("generator/", TemplateView.as_view(template_name="coming-soon.html")),
+    path("privacy/", TemplateView.as_view(template_name="coming-soon.html")),
+    path("sponsors/", TemplateView.as_view(template_name="coming-soon.html")),
     path("admin/", admin.site.urls),
 ]
 
@@ -39,5 +52,5 @@ if settings.DEBUG:
 
 urlpatterns += [
     path("healthz", views.index),
-    path("<path:resource>", TemplateView.as_view(template_name="coming-soon.html")),
+    # path("<path:resource>", TemplateView.as_view(template_name="coming-soon.html")),
 ]

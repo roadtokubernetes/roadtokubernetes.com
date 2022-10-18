@@ -1,0 +1,15 @@
+{% load compress %}
+{% load static %}
+
+
+{% compress js file vendor %}
+<script src="{% static 'vendor/flowbite/flowbite.js' %}" preload></script>
+<script src="{% static 'vendor/dompurify/purify.min.js' %}" preload></script>
+<script src="{% static 'vendor/showdown/showdown.min.js' %}" preload></script>
+<script src="{% static 'vendor/highlight/highlight.min.js' %}" preload></script>
+{% endcompress %}
+
+
+{% compress js file roadtok8s %}
+<script src="{% static 'src/custom.js' %}" defer></script>
+{% endcompress %}
