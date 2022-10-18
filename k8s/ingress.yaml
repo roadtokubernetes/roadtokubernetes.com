@@ -19,6 +19,8 @@ spec:
       - console.roadtokubernetes.com
       - a.roadtokubernetes.com
       - roadtokubernetes.com
+      - rk8s.com
+      - www.rk8s.com
       secretName: tls-www-roadtokubernetes
   rules:
   - host: www.roadtokubernetes.com
@@ -52,6 +54,46 @@ spec:
         path: /
         pathType: Prefix
   - host: roadtokubernetes.com
+    http:
+      paths:
+      - backend:
+          service: 
+            name: www-roadtokubernetes-com-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: links.rk8s.com
+    http:
+      paths:
+      - backend:
+          service: 
+            name: www-roadtokubernetes-com-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: l.rk8s.com
+    http:
+      paths:
+      - backend:
+          service: 
+            name: www-roadtokubernetes-com-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: www.rk8s.com
+    http:
+      paths:
+      - backend:
+          service: 
+            name: www-roadtokubernetes-com-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: rk8s.com
     http:
       paths:
       - backend:
