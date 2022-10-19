@@ -4,6 +4,7 @@ django-compressor
 gunicorn
 markdown
 python-decouple
+django-htmx
 django-storages
 black
 boto

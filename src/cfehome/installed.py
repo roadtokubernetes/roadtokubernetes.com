@@ -14,6 +14,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_tailwind", 
     "django_hosts",
+    "django_htmx",
     "rangefilter",
     # internal
     "articles",
