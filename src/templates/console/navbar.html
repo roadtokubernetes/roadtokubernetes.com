@@ -40,7 +40,12 @@
             <span class="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">{{ user.profile.username }}</span>
           </div>
           <ul class="py-1" aria-labelledby="user-menu-button">
-           
+            <li>
+              <a href="{{ projects_list_url }}" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                  Projects
+              </a>
+            </li>
+
             <li>
               <a href="{% url 'account_logout' %}" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
             </li>
@@ -64,10 +69,7 @@
             <a href="/blog/" {% if "/blog/" in current_page  %}aria-current="page" {% endif %} class="{% if "/blog/" in current_page %}{{ active_link }} {% else %}  {{ inactive_link }}{% endif %}">Blog</a>
           </li>
 
-          <li>
-            
-          </li>
- 
+        
         </ul>
         
 

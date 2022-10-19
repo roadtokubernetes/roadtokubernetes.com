@@ -9,7 +9,7 @@
 
 </head>
 
-<body class="bg-white dark:bg-gray-900">
+<body class="bg-white dark:bg-gray-900" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
     
     {% include 'console/navbar.html' %}

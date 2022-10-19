@@ -1,10 +1,43 @@
+from console.context_processors import console_url as console_url_context
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import generic
+from django_htmx.http import (HttpResponseClientRedirect,
+                              HttpResponseClientRefresh)
 
+from .context_processors import projects_context
 from .forms import ProjectForm
 from .models import Project
+
+
+def projects_choices_view(request):
+    user = request.user
+    if not request.htmx:
+        return render(request, "400.html", status=400)
+    if not user.is_authenticated:
+        return render(request, "hx/login-required.html", status=400)
+    queryset = Project.objects.filter(user=request.user)
+    if request.method == "POST":
+        print(request.POST)
+        if 'project_id' in request.POST:
+            """
+            Current project was updated
+            """
+            project_id = request.POST.get('project_id')
+            if project_id == "create":
+                url_options = projects_context(request)
+                return HttpResponseClientRedirect(url_options['projects_create_url'])
+            qs_exists = queryset.filter(project_id=project_id).exists()
+            if qs_exists:
+                print(request.path)
+                request.session['project_id'] = project_id
+                console_url = console_url_context(request)['console_url']
+                # return HttpResponseClientRedirect(console_url)
+                return HttpResponseClientRefresh()
+    queryset = queryset[:10]
+    return render(request, "projects/snippets/project_choices.html", {"object_list": queryset})
 
 
 class ProjectDetailView(LoginRequiredMixin,SuccessMessageMixin, generic.UpdateView):
