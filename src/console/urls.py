@@ -5,8 +5,10 @@ from django.views.generic import RedirectView, TemplateView
 
 from . import views
 
+app_name="console"
+
 urlpatterns = [
-    path("", views.console_view),
+    path("", views.console_view, name='index'),
     path('account/', include('allauth.urls')),
     path('projects/', include('projects.urls')),
 

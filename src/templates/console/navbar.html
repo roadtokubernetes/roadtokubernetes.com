@@ -6,7 +6,7 @@
 <nav class="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
     <div class="container flex flex-wrap items-center mx-auto">
       <a href="/" class="flex items-center mr-5">
-          <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Road to Kubernetes</span>
+          <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">RK8s</span>
       </a>
       <div class="flex md:order-1 md:ml-1 md:mr-auto ml-auto">
         <button type="button" data-collapse-toggle="navbar-search" aria-controls="navbar-search" aria-expanded="false" class="md:hidden  text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 mr-1" >
@@ -66,7 +66,7 @@
         <ul class="flex flex-col p-4 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
          
           <li>
-            <a href="/blog/" {% if "/blog/" in current_page  %}aria-current="page" {% endif %} class="{% if "/blog/" in current_page %}{{ active_link }} {% else %}  {{ inactive_link }}{% endif %}">Blog</a>
+            <a href="{{ blog_url }}" {% if "/blog/" in current_page  %}aria-current="page" {% endif %} class="{% if "/blog/" in current_page %}{{ active_link }} {% else %}  {{ inactive_link }}{% endif %}">Blog</a>
           </li>
 
         

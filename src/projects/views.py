@@ -1,4 +1,3 @@
-from console.context_processors import console_url as console_url_context
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponse
@@ -31,7 +30,7 @@ def projects_choices_view(request):
             qs_exists = queryset.filter(project_id=project_id).exists()
             if qs_exists:
                 request.session['project_id'] = project_id
-                console_url = console_url_context(request)['console_url']
+                # console_url = cfehome_urls(request)['console_url']
                 # return HttpResponseClientRedirect(console_url)
                 return HttpResponseClientRefresh()
     queryset = queryset[:10]

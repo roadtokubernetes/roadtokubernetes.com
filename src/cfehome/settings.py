@@ -93,7 +93,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "console.context_processors.console_url",
+                "cfehome.context_processors.cfehome_urls",
                 "projects.context_processors.projects_context",
             ],
         },

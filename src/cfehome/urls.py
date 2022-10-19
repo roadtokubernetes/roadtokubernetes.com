@@ -22,7 +22,7 @@ from django.views.generic import RedirectView, TemplateView
 from . import views
 
 urlpatterns = [
-    path("", views.index),
+    path("", views.index, name='index'),
     re_path(r"^signup/?", RedirectView.as_view(url="/account/signup/")),
     re_path(r"^sign-up/?", RedirectView.as_view(url="/account/signup/")),
     re_path(r"^join/?", RedirectView.as_view(url="/account/signup/")),
