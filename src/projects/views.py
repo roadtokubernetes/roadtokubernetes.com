@@ -20,7 +20,6 @@ def projects_choices_view(request):
         return render(request, "hx/login-required.html", status=400)
     queryset = Project.objects.filter(user=request.user)
     if request.method == "POST":
-        print(request.POST)
         if 'project_id' in request.POST:
             """
             Current project was updated
@@ -31,7 +30,6 @@ def projects_choices_view(request):
                 return HttpResponseClientRedirect(url_options['projects_create_url'])
             qs_exists = queryset.filter(project_id=project_id).exists()
             if qs_exists:
-                print(request.path)
                 request.session['project_id'] = project_id
                 console_url = console_url_context(request)['console_url']
                 # return HttpResponseClientRedirect(console_url)
