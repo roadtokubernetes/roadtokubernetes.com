@@ -19,5 +19,6 @@ INSTALLED_APPS = [
     "articles",
     "console",
     "profiles",
+    "projects",
 
 ]
