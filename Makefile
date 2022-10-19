@@ -4,6 +4,8 @@ vendor_files:
 	mkdir -p src/static/vendor/highlight/
 	mkdir -p src/static/vendor/flowbite/
 	mkdir -p src/static/vendor/showdown/
+	mkdir -p src/static/vendor/htmx/
+	curl -L https://unpkg.com/htmx.org@1.8.2 -o ./src/static/vendor/htmx/htmx.min.js
 	cp -R node_modules/dompurify/dist/ ./src/static/vendor/dompurify/
 	curl https://unpkg.com/@highlightjs/cdn-assets@11.6.0/highlight.min.js -o src/static/vendor/highlight/highlight.min.js
 	cp node_modules/highlight.js/styles/monokai-sublime.css ./src/static/vendor/highlight/monokai-sublime.min.css

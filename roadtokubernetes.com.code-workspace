@@ -18,7 +18,9 @@
       "allauth",
       "blocklist",
       "cfehome",
-      "rangefilter"
+      "htmx",
+      "rangefilter",
+      "socialaccount"
     ]
   }
 }

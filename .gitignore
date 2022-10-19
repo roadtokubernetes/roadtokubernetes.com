@@ -3,6 +3,7 @@
 .kube/
 
 cdn-local/
+src/static/vendor/
 src/static/js/vendor/
 src/static/min/
 *.env
