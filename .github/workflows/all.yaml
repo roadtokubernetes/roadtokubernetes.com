@@ -32,6 +32,7 @@ jobs:
         KUBE_TOKEN:  ${{ secrets.KUBE_TOKEN }}
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         ALLOWED_HOST: ${{ secrets.ALLOWED_HOST }}
+        ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
         BASE_URL: ${{ secrets.BASE_URL }}
         DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}

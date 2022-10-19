@@ -19,6 +19,8 @@ on:
         required: true
       ALLOWED_HOST: 
         required: true
+      ALLOWED_HOSTS:
+        required: true
       BASE_URL: 
         required: true
       DJANGO_SECRET_KEY: 
@@ -102,6 +104,7 @@ jobs:
         run: |
           cat << EOF >> src/prod.env
           ALLOWED_HOST=${{ secrets.ALLOWED_HOST }}
+          ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}
           BASE_URL=${{ secrets.BASE_URL }}
           DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
           DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }}

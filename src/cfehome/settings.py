@@ -16,7 +16,7 @@ from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-FIXTURES_DIR =  BASE_DIR / "fixtures"
+FIXTURES_DIR = BASE_DIR / "fixtures"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -31,6 +31,8 @@ BASE_URL = config("BASE_URL", default=None)
 
 ALLOWED_HOSTS = []
 ALLOWED_HOST = config("ALLOWED_HOST", default=None)
+_ALLOWED_HOSTS = [x.strip() for x in config("ALLOWED_HOSTS", default="").split(",")]
+ALLOWED_HOSTS += _ALLOWED_HOSTS
 if ALLOWED_HOST is not None:
     ALLOWED_HOSTS.append(ALLOWED_HOST)
 if PARENT_HOST is not None:
@@ -38,22 +40,22 @@ if PARENT_HOST is not None:
 if DEBUG and DEBUG_HOSTNAME:
     ALLOWED_HOSTS.append(DEBUG_HOSTNAME)
 
-
-
 # Email definition
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = config("EMAIL_HOST", default='localhost') # 'email-smtp.ap-northeast-1.amazonaws.com'
-EMAIL_HOST_USER = config("EMAIL_HOST_USER", default='')
-EMAIL_HOST_PASSWORD= config('EMAIL_HOST_PASSWORD', default='')
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='webmaster@localhost')
-SERVER_EMAIL =  config('SERVER_EMAIL', default='root@localhost')
-MANAGER_EMAIL = config('MANAGER_EMAIL', default=None)
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = config(
+    "EMAIL_HOST", default="localhost"
+)  # 'email-smtp.ap-northeast-1.amazonaws.com'
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="webmaster@localhost")
+SERVER_EMAIL = config("SERVER_EMAIL", default="root@localhost")
+MANAGER_EMAIL = config("MANAGER_EMAIL", default=None)
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 if MANAGER_EMAIL:
-    ADMINS = (('Admin', MANAGER_EMAIL), )
+    ADMINS = (("Admin", MANAGER_EMAIL),)
     MANAGERS = ADMINS
 
 # Application definition
@@ -72,7 +74,7 @@ MIDDLEWARE = [
     "django_hosts.middleware.HostsResponseMiddleware",
 ]
 
-APPEND_SLASH= True
+APPEND_SLASH = True
 ROOT_URLCONF = "cfehome.urls"
 ROOT_HOSTCONF = "cfehome.hosts"
 DEFAULT_HOST = "www"
@@ -115,7 +117,6 @@ from .db import *  # noqa
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
 
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -133,10 +134,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
+    "django.contrib.auth.backends.ModelBackend",
     # `allauth` specific authentication methods, such as login by e-mail
-    'allauth.account.auth_backends.AuthenticationBackend',
-] 
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
 
 SITE_ID = 1
 
@@ -166,7 +167,6 @@ CRISPY_TEMPLATE_PACK = "tailwind"
 COMPRESS_ROOT = BASE_DIR / "static"
 COMPRESS_OUTPUT_DIR = "min"
 COMPRESS_ENABLED = True
-
 
 
 # https://django-compressor.readthedocs.io/en/stable/remote-storages.html#django-storages
@@ -224,8 +224,12 @@ if OBJECT_STORAGE_READY:
         DEFAULT_FILE_STORAGE = "cfehome.storage.backends.MediaPrivateS3BotoStorage"
         STATICFILES_STORAGE = "cfehome.storage.backends.CachedS3Boto3Storage"
         STATIC_URL = f"https://{LINODE_BUCKET_REGION}.linodeobjects.com/"
-        COMPRESS_URL = f"https://{LINODE_BUCKET_REGION}.linodeobjects.com/{LINODE_BUCKET}/"
-        COMPRESS_STORAGE = STATICFILES_STORAGE  # 'storages.backends.s3boto3.S3Boto3Storage'
+        COMPRESS_URL = (
+            f"https://{LINODE_BUCKET_REGION}.linodeobjects.com/{LINODE_BUCKET}/"
+        )
+        COMPRESS_STORAGE = (
+            STATICFILES_STORAGE  # 'storages.backends.s3boto3.S3Boto3Storage'
+        )
         COMPRESS_ROOT = STATIC_ROOT
         COMPRESS_OFFLINE_CONTEXT = {"STATIC_URL": "/static/"}
 
@@ -240,7 +244,7 @@ SECURE_HSTS_SECONDS = None
 SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 SECURE_FRAME_DENY = False
 CSRF_USE_SESSIONS = True
-SESSION_COOKIE_DOMAIN = config('SESSION_DOMAIN', default=PARENT_HOST)
+SESSION_COOKIE_DOMAIN = config("SESSION_DOMAIN", default=PARENT_HOST)
 
 if not DEBUG:
     # CORS_REPLACE_HTTPS_REFERER      = True
@@ -254,10 +258,10 @@ if not DEBUG:
     SECURE_FRAME_DENY = True
 
 
-LOGIN_URL = '/account/login'
+LOGIN_URL = "/account/login"
 CONSOLE_URL = ""
 if PARENT_HOST:
-    LOGIN_URL = f'{HOST_SCHEME}www.{PARENT_HOST}/login'
-    CONSOLE_URL = f'{HOST_SCHEME}console.{PARENT_HOST}'
+    LOGIN_URL = f"{HOST_SCHEME}www.{PARENT_HOST}/login"
+    CONSOLE_URL = f"{HOST_SCHEME}console.{PARENT_HOST}"
     LOGIN_REDIRECT_URL = CONSOLE_URL
     LOGOUT_REDIRECT_URL = LOGIN_URL
