@@ -56,3 +56,4 @@ jobs:
         DEFAULT_FROM_EMAIL: ${{ secrets.DEFAULT_FROM_EMAIL }}
         SERVER_EMAIL: ${{ secrets.SERVER_EMAIL }}
         MANAGER_EMAIL: ${{ secrets.MANAGER_EMAIL }}
+        BLOG_TOKEN: ${{ secrets.BLOG_TOKEN }}

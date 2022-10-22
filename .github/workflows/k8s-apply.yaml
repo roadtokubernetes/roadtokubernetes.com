@@ -67,6 +67,8 @@ on:
         required: true
       MANAGER_EMAIL: 
         required: true
+      BLOG_TOKEN:
+        required: true
 
 jobs:
   k8s_changes:
@@ -128,6 +130,7 @@ jobs:
           DEFAULT_FROM_EMAIL=${{ secrets.DEFAULT_FROM_EMAIL }}
           SERVER_EMAIL=${{ secrets.SERVER_EMAIL }}
           MANAGER_EMAIL=${{ secrets.MANAGER_EMAIL }}
+          BLOG_TOKEN=${{ secrets.BLOG_TOKEN }}
           EOF
           KUBECONFIG=~/.kube/kubeconfig.yaml kubectl delete secret www-roadtokubernetes-com-prod-env --ignore-not-found
           KUBECONFIG=~/.kube/kubeconfig.yaml kubectl create secret generic www-roadtokubernetes-com-prod-env --from-env-file=src/prod.env

@@ -2,10 +2,13 @@ import markdown
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
+from django.db.models.signals import post_save
 from django.template.defaultfilters import truncatechars
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import strip_tags
+from django_hosts.resolvers import reverse as hosts_reverse
+from gh.client import ArticleMapper
 
 from . import utils
 
@@ -100,6 +103,9 @@ class Article(models.Model):
     def get_absolute_url(self):
         return reverse("articles:article-detail", kwargs={"slug": self.slug})
 
+    def get_host_url(self):
+        return hosts_reverse("articles:article-detail", kwargs={"slug": self.slug}, host="www")
+
     def get_image_url(self):
         if not self.image:
             return None
@@ -111,6 +117,13 @@ class Article(models.Model):
     @property
     def author(self):
         return self.user
+
+    @property
+    def author_name(self):
+        try:
+            return self.author.get_full_name()
+        except:
+            return None
 
     @property
     def is_published(self):
@@ -151,3 +164,20 @@ class Article(models.Model):
         if self.title and not self.meta_title:
             self.meta_title = truncatechars(self.title, 160)
         super().save(*args, **kwargs)
+
+
+
+def article_post_save(sender, instance, *args, **kwargs):
+    if settings.DEBUG is False and instance.is_published:
+        gh_mapper = ArticleMapper(
+            slug=instance.slug,
+            title=instance.title,
+            author=instance.author_name,
+            publish_timestamp=instance.publish_timestamp,
+            content=instance.content,
+            url=instance.get_host_url(),
+        )
+        gh_mapper.save()
+
+
+post_save.connect(article_post_save, sender=Article)
