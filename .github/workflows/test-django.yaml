@@ -31,7 +31,7 @@ jobs:
       GITHUB_ACTIONS: true
       DJANGO_SECRET_KEY: test-key-not-good
       DATABASE_BACKEND: postgres
-      PARENT_HOST: "localhost"
+      PARENT_HOST: localhost
     services:
       postgres_main:
         image: postgres:12
