@@ -1,5 +1,6 @@
 
 {% with request.path as current_page %}
+{% with user.profile as user_profile %}
 {% with 'block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white' as active_link %}
 {% with 'block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700' as inactive_link %}
 
@@ -29,10 +30,18 @@
       </div>
 
       <div class="flex items-center md:order-2">
+        {% if user_profile and user_profile.image %}
         <button type="button" class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
           <span class="sr-only">Open user menu</span>
-          <img class="w-8 h-8 rounded-full" src="{{ user.profile.image.url }}" alt="user photo">
+         
+            <img class="w-8 h-8 rounded-full" src="{{ user_profile.image.url }}" alt="user photo">
+           
         </button>
+
+        {% else %}
+        <button class="text-white bg-gray-900 dark:bg-white dark:text-gray-900 px-3 text-dark border border-sky-900 rounded-full" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">{{ user.username.0 }}</span>
+      {% endif %}
+
         <!-- Dropdown menu -->
         <div class="hidden z-50 my-4 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
           <div class="py-3 px-4">
@@ -81,6 +90,7 @@
   </nav>
 
 
+  {% endwith %}
   {% endwith %}
   {% endwith %}
   {% endwith %}
