@@ -57,3 +57,4 @@ jobs:
         SERVER_EMAIL: ${{ secrets.SERVER_EMAIL }}
         MANAGER_EMAIL: ${{ secrets.MANAGER_EMAIL }}
         BLOG_TOKEN: ${{ secrets.BLOG_TOKEN }}
+        GH_WEBHOOK_SECRET: ${{ secrets.GH_WEBHOOK_SECRET }}

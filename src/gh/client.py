@@ -43,16 +43,38 @@ class ArticleMapper:
             "Authorization": f"Bearer {GH_BLOG_TOKEN}"
         }
     
-    def get_prev_sha(self):
+    def get_repo_file(self, raw_request=False):
         r = requests.get(self.api_endpoint, headers=self._headers)
+        if raw_request:
+            return r
         if r.status_code == 404:
+            return None
+        return r.json()
+
+    def get_repo_file_contents(self):
+        r = self.get_repo_file(raw_request=True)
+        if r.status_code != 200:
             return ""
-        return r.json().get('sha')
+        data = r.json()
+        content = data.get('content') or None
+        if content is None:
+            return ""
+        try:
+            return base64.b64decode(content).decode("utf-8")
+        except:
+            pass
+
+    def get_prev_sha(self):
+        data = self.get_repo_file()
+        if data is None:
+            return None
+        return data.get('sha')
     
     def get_encoded_content(self):
         markdown_content = render_to_string("gh/article_base.md", {
             "title": self.title,
             "author": self.author,
+            "slug": self.slug,
             "publish_timestamp": self.publish_timestamp,
             "url": self.url,
             "tags": self.tags,
@@ -61,7 +83,7 @@ class ArticleMapper:
         markdown_content_bytes = markdown_content.encode()
         content_encoded = base64.b64encode(markdown_content_bytes).decode()
         return content_encoded
-    
+        
     def save(self):
         data = json.dumps({
             "message": self.api_message,

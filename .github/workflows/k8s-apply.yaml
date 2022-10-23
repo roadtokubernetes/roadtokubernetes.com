@@ -69,6 +69,8 @@ on:
         required: true
       BLOG_TOKEN:
         required: true
+      GH_WEBHOOK_SECRET:
+        required: true
 
 jobs:
   k8s_changes:
@@ -131,6 +133,7 @@ jobs:
           SERVER_EMAIL=${{ secrets.SERVER_EMAIL }}
           MANAGER_EMAIL=${{ secrets.MANAGER_EMAIL }}
           BLOG_TOKEN=${{ secrets.BLOG_TOKEN }}
+          GH_WEBHOOK_SECRET=${{ secrets.GH_WEBHOOK_SECRET }}
           EOF
           KUBECONFIG=~/.kube/kubeconfig.yaml kubectl delete secret www-roadtokubernetes-com-prod-env --ignore-not-found
           KUBECONFIG=~/.kube/kubeconfig.yaml kubectl create secret generic www-roadtokubernetes-com-prod-env --from-env-file=src/prod.env

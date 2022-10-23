@@ -42,6 +42,7 @@ urlpatterns = [
     path("privacy/", TemplateView.as_view(template_name="coming-soon.html")),
     path("sponsors/", TemplateView.as_view(template_name="coming-soon.html")),
     path("admin/", admin.site.urls),
+    path("webhooks/blog/", include("gh.webhooks"))
 ]
 
 if settings.DEBUG:

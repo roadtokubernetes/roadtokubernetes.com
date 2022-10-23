@@ -4,7 +4,6 @@ from django.db import models
 from django.db.models import Q
 from django.db.models.signals import post_save
 from django.template.defaultfilters import truncatechars
-from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import strip_tags
 from django_hosts.resolvers import reverse as hosts_reverse
@@ -101,9 +100,12 @@ class Article(models.Model):
         ordering = ["-user_publish_timestamp", "-publish_timestamp", "-updated"]
 
     def get_absolute_url(self):
-        return reverse("articles:article-detail", kwargs={"slug": self.slug})
+        return hosts_reverse("articles:article-detail", kwargs={"slug": self.slug},host="www")
 
     def get_host_url(self):
+        if settings.DEBUG:
+            path = hosts_reverse("articles:article-detail", kwargs={"slug": self.slug},host="www")
+            return path.replace(settings.BASE_URL, settings.PROD_URL)
         return hosts_reverse("articles:article-detail", kwargs={"slug": self.slug}, host="www")
 
     def get_image_url(self):
@@ -168,7 +170,7 @@ class Article(models.Model):
 
 
 def article_post_save(sender, instance, *args, **kwargs):
-    if settings.DEBUG is False and instance.is_published:
+    if instance.is_published:
         gh_mapper = ArticleMapper(
             slug=instance.slug,
             title=instance.title,

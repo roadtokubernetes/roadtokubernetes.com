@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 
 BASE_URL = getattr(settings, 'BASE_URL', None)
 def homepage_redirect(request, path=None):
-    url = "https://www.roadtokubernetes.com"
+    url = f"{settings.PROD_URL}"
     if BASE_URL is not None:
         url = BASE_URL
     if not url.endswith("/"):

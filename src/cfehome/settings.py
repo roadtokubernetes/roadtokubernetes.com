@@ -28,6 +28,7 @@ DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
 DEBUG_HOSTNAME = config("DEBUG_HOSTNAME", default=None)
 PARENT_HOST = config("PARENT_HOST", default=None)
 BASE_URL = config("BASE_URL", default=None)
+PROD_URL = config("PROD_URL", default="https://www.roadtokubernetes.com")
 
 ALLOWED_HOSTS = []
 ALLOWED_HOST = config("ALLOWED_HOST", default=None)
@@ -81,6 +82,7 @@ ROOT_HOSTCONF = "cfehome.hosts"
 DEFAULT_HOST = "www"
 DEFAULT_ADMIN_HOST = config("DEFAULT_ADMIN_HOST", default="admin")
 GH_BLOG_TOKEN=config("BLOG_TOKEN", default=None)
+GH_WEBHOOK_SECRET=config("GH_WEBHOOK_SECRET", default=None)
 
 TEMPLATES = [
     {
