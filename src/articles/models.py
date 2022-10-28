@@ -1,4 +1,5 @@
 import markdown
+from cfehome.storage.utils import get_public_storage
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
@@ -70,7 +71,10 @@ class Article(models.Model):
     meta_description = models.TextField(blank=True, null=True)
     meta_title = models.CharField(max_length=120, blank=True, null=True)
     image = models.ImageField(
-        upload_to=utils.get_article_image_upload_to, null=True, blank=True
+        upload_to=utils.get_article_image_upload_to,
+        null=True,
+        blank=True,
+        storage=get_public_storage,
     )
     publish_status = models.CharField(
         max_length=3,
@@ -100,13 +104,19 @@ class Article(models.Model):
         ordering = ["-user_publish_timestamp", "-publish_timestamp", "-updated"]
 
     def get_absolute_url(self):
-        return hosts_reverse("articles:article-detail", kwargs={"slug": self.slug},host="www")
+        return hosts_reverse(
+            "articles:article-detail", kwargs={"slug": self.slug}, host="www"
+        )
 
     def get_host_url(self):
         if settings.DEBUG:
-            path = hosts_reverse("articles:article-detail", kwargs={"slug": self.slug},host="www")
+            path = hosts_reverse(
+                "articles:article-detail", kwargs={"slug": self.slug}, host="www"
+            )
             return path.replace(settings.BASE_URL, settings.PROD_URL)
-        return hosts_reverse("articles:article-detail", kwargs={"slug": self.slug}, host="www")
+        return hosts_reverse(
+            "articles:article-detail", kwargs={"slug": self.slug}, host="www"
+        )
 
     def get_image_url(self):
         if not self.image:
@@ -115,7 +125,7 @@ class Article(models.Model):
 
     def get_meta_description(self):
         return self.meta_description if self.meta_description else self.title
-    
+
     @property
     def author(self):
         return self.user
@@ -162,11 +172,12 @@ class Article(models.Model):
             content_marked = markdown.markdown(self.content)
             content_stripped = strip_tags(content_marked)
             meta_description_trunc = truncatechars(content_stripped, 160)
-            self.meta_description = utils.strip_string_formatting(meta_description_trunc)
+            self.meta_description = utils.strip_string_formatting(
+                meta_description_trunc
+            )
         if self.title and not self.meta_title:
             self.meta_title = truncatechars(self.title, 160)
         super().save(*args, **kwargs)
-
 
 
 def article_post_save(sender, instance, *args, **kwargs):
