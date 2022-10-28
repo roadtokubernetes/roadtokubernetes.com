@@ -4,8 +4,8 @@ name: 1 - Run Everything
 on:
   workflow_dispatch:
   # left in for reference only
-  # push:
-  #   branches: [main]
+  push:
+    branches: [main]
   # pull_request:
   #   branches: [main]
 
