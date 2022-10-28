@@ -4,10 +4,10 @@
 <div class="max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
 
     {% if article.image %} 
-    <a href={{ url }}">
-    <img class="rounded-t-lg" src="{{ article.image.url }}" alt="{{ article.title }}">
-    </a>
-{% endif %}
+        <a href="{{ url }}">
+            <img class="rounded-t-lg" src="{{ article.image.url }}" alt="{{ article.title }}">
+        </a>
+    {% endif %}
 
     <div class="p-5">
         <a href="{{ url }}">
