@@ -39,7 +39,7 @@
     <div class="flex items-stretch">
         <div class="col-span-11 lg:col-span-8 mx-auto justify-center justify-self-center">
             {% for object in object_list %}
-                {% include 'articles/article_card_v.html' with article=object %}
+                {% include 'articles/article_card_h.html' with article=object %}
 
             {% empty %}
              {% if query %} 

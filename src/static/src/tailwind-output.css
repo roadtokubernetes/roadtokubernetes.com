@@ -2110,6 +2110,10 @@ input:checked + .toggle-bg {
   height: 2.25rem;
 }
 
+.h-auto {
+  height: auto;
+}
+
 .min-h-screen {
   min-height: 100vh;
 }
@@ -2188,6 +2192,10 @@ input:checked + .toggle-bg {
 
 .max-w-md {
   max-width: 28rem;
+}
+
+.max-w-full {
+  max-width: 100%;
 }
 
 .flex-1 {
@@ -2573,8 +2581,29 @@ input:checked + .toggle-bg {
   background-color: rgb(255 255 255 / 0.5);
 }
 
+.bg-gray-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(107 114 128 / var(--tw-bg-opacity));
+}
+
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
+}
+
+.bg-cover {
+  background-size: cover;
+}
+
+.bg-local {
+  background-attachment: local;
+}
+
+.bg-center {
+  background-position: center;
+}
+
+.bg-no-repeat {
+  background-repeat: no-repeat;
 }
 
 .object-cover {
@@ -2608,6 +2637,18 @@ input:checked + .toggle-bg {
 
 .p-1 {
   padding: 0.25rem;
+}
+
+.p-8 {
+  padding: 2rem;
+}
+
+.p-14 {
+  padding: 3.5rem;
+}
+
+.p-20 {
+  padding: 5rem;
 }
 
 .py-8 {
@@ -2887,14 +2928,14 @@ input:checked + .toggle-bg {
   color: rgb(26 86 219 / var(--tw-text-opacity));
 }
 
-.text-rose-600 {
-  --tw-text-opacity: 1;
-  color: rgb(225 29 72 / var(--tw-text-opacity));
-}
-
 .text-black {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
+}
+
+.text-rose-600 {
+  --tw-text-opacity: 1;
+  color: rgb(225 29 72 / var(--tw-text-opacity));
 }
 
 .underline {
@@ -2916,6 +2957,10 @@ input:checked + .toggle-bg {
 
 .opacity-100 {
   opacity: 1;
+}
+
+.bg-blend-multiply {
+  background-blend-mode: multiply;
 }
 
 .shadow {
@@ -3046,6 +3091,10 @@ input:checked + .toggle-bg {
 .hover\:no-underline:hover {
   -webkit-text-decoration-line: none;
           text-decoration-line: none;
+}
+
+.hover\:bg-blend-soft-light:hover {
+  background-blend-mode: soft-light;
 }
 
 .focus\:z-10:focus {
@@ -3277,6 +3326,11 @@ input:checked + .toggle-bg {
   color: rgb(30 66 159 / var(--tw-text-opacity));
 }
 
+.dark .dark\:text-gray-900 {
+  --tw-text-opacity: 1;
+  color: rgb(17 24 39 / var(--tw-text-opacity));
+}
+
 .dark .dark\:text-blue-500 {
   --tw-text-opacity: 1;
   color: rgb(63 131 248 / var(--tw-text-opacity));
@@ -3285,11 +3339,6 @@ input:checked + .toggle-bg {
 .dark .dark\:text-rose-400 {
   --tw-text-opacity: 1;
   color: rgb(251 113 133 / var(--tw-text-opacity));
-}
-
-.dark .dark\:text-gray-900 {
-  --tw-text-opacity: 1;
-  color: rgb(17 24 39 / var(--tw-text-opacity));
 }
 
 .dark .dark\:placeholder-gray-400::-moz-placeholder {
@@ -3344,6 +3393,10 @@ input:checked + .toggle-bg {
 .dark .dark\:hover\:text-gray-300:hover {
   --tw-text-opacity: 1;
   color: rgb(209 213 219 / var(--tw-text-opacity));
+}
+
+.dark .dark\:hover\:bg-blend-darken:hover {
+  background-blend-mode: darken;
 }
 
 .dark .dark\:focus\:border-blue-500:focus {
