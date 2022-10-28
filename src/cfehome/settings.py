@@ -81,8 +81,8 @@ ROOT_URLCONF = "cfehome.urls"
 ROOT_HOSTCONF = "cfehome.hosts"
 DEFAULT_HOST = "www"
 DEFAULT_ADMIN_HOST = config("DEFAULT_ADMIN_HOST", default="admin")
-GH_BLOG_TOKEN=config("BLOG_TOKEN", default=None)
-GH_WEBHOOK_SECRET=config("GH_WEBHOOK_SECRET", default=None)
+GH_BLOG_TOKEN = config("BLOG_TOKEN", default=None)
+GH_WEBHOOK_SECRET = config("GH_WEBHOOK_SECRET", default=None)
 
 TEMPLATES = [
     {

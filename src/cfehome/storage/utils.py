@@ -1,7 +1,11 @@
-from cfehome.storage.backends import MediaPublicS3BotoStorage
 from django.conf import settings
-from django.core.files.storage import FileSystemStorage
+from django.core.files.storage import get_storage_class
+
+from . import backends
 
 
 def get_public_storage():
-    return FileSystemStorage() if settings.DEBUG else MediaPublicS3BotoStorage()
+    _Storage = backends.MediaPublicS3BotoStorage
+    if settings.DEBUG:
+        _Storage = get_storage_class()
+    return _Storage()

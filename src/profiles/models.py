@@ -1,3 +1,4 @@
+from cfehome.storage.utils import get_public_storage
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
@@ -11,7 +12,10 @@ User = settings.AUTH_USER_MODEL
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(
-        upload_to=utils.get_profile_image_upload_to, blank=True, null=True, storage=utils.get_profile_storage
+        upload_to=utils.get_profile_image_upload_to,
+        blank=True,
+        null=True,
+        storage=get_public_storage,
     )
     title = models.CharField(max_length=120, null=True, blank=True)
     description = models.TextField(blank=True, null=True)
