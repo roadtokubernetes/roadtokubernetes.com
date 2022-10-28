@@ -22,7 +22,7 @@ from django.views.generic import RedirectView, TemplateView
 from . import views
 
 urlpatterns = [
-    path("", views.index, name='index'),
+    path("", views.index, name="index"),
     re_path(r"^signup/?", RedirectView.as_view(url="/account/signup/")),
     re_path(r"^sign-up/?", RedirectView.as_view(url="/account/signup/")),
     re_path(r"^join/?", RedirectView.as_view(url="/account/signup/")),
@@ -30,11 +30,11 @@ urlpatterns = [
     re_path(r"^sign-in/?", RedirectView.as_view(url="/account/login/")),
     re_path(r"^login/?", RedirectView.as_view(url="/account/login/")),
     re_path(r"^logout/?", RedirectView.as_view(url="/account/logout/")),
-    path('account/', include('allauth.urls')),
-    path("blog", RedirectView.as_view(url='/blog/')),
+    path("account/", include("allauth.urls")),
+    path("blog", RedirectView.as_view(url="/blog/")),
     path("blog/", include("articles.urls")),
-    path("search", RedirectView.as_view(url='/search/')),
-    path("search/", articles_views.SearchView.as_view()),
+    path("search", RedirectView.as_view(url="/search/")),
+    path("search/", articles_views.SearchView.as_view(), name="search"),
     path("u/", include("profiles.urls")),
     path("about/", TemplateView.as_view(template_name="coming-soon.html")),
     path("contact/", TemplateView.as_view(template_name="coming-soon.html")),
@@ -42,7 +42,7 @@ urlpatterns = [
     path("privacy/", TemplateView.as_view(template_name="coming-soon.html")),
     path("sponsors/", TemplateView.as_view(template_name="coming-soon.html")),
     path("admin/", admin.site.urls),
-    path("webhooks/blog/", include("gh.webhooks"))
+    path("webhooks/blog/", include("gh.webhooks")),
 ]
 
 if settings.DEBUG:
