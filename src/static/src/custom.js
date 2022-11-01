@@ -42,43 +42,43 @@
 
 
 
-        const classMap = {
-            h1: 'text-4xl  my-2',
-            h2: 'text-3xl my-2',
-            h3: 'text-2xl  my-2',
-            h4: 'text-xl  my-2',
-            h5: 'text-lg my-2',
-            code: 'dark:text-rose-400 text-rose-600 text-left',
-            'pre code': 'dark:text-white text-white bg-black text-left',
-            }
+const classMap = {
+    h1: 'text-4xl  my-2',
+    h2: 'text-3xl my-2',
+    h3: 'text-2xl  my-2',
+    h4: 'text-xl  my-2',
+    h5: 'text-lg my-2',
+    code: 'dark:text-rose-400 text-rose-600 text-left',
+    'pre code': 'dark:text-white text-white bg-black text-left',
+    }
 
-            const bindings = Object.keys(classMap)
-            .map(key => ({
-                type: 'output',
-                regex: new RegExp(`<${key}(.*)>`, 'g'),
-                replace: `<${key} class="${classMap[key]}" $1>`
-            }));
+    const bindings = Object.keys(classMap)
+    .map(key => ({
+        type: 'output',
+        regex: new RegExp(`<${key}(.*)>`, 'g'),
+        replace: `<${key} class="${classMap[key]}" $1>`
+    }));
 
-            const preCode = {
-                type: 'output',
-                regex: new RegExp(`<pre>\\s*<code (.*)>`, 'g'),
-                replace: `<pre><code class="${classMap['pre code']}" $1>`
-            }
+    const preCode = {
+        type: 'output',
+        regex: new RegExp(`<pre>\\s*<code (.*)>`, 'g'),
+        replace: `<pre><code class="${classMap['pre code']}" $1>`
+    }
 
-        function inputToSafeMarkdown (textInput) {
-            const extensions = [...bindings, preCode,]
-            var converter = new showdown.Converter({"extensions":extensions })
-            // converter.addExtension(customClassExt);
-            let markdown = textInput
-            let markedContent = converter.makeHtml(markdown);
-            let sanitizedContent = DOMPurify.sanitize(markedContent)
-            return DOMPurify.sanitize(sanitizedContent)
-        }
-        const markdownElements = document.getElementsByClassName('markdown')
-        for (let el of markdownElements) {
-            el.innerHTML = inputToSafeMarkdown(el.innerHTML)
-            el.classList.remove('hidden')
-        }
-        if (hljs) {
-            hljs.highlightAll();
-        }
+function inputToSafeMarkdown (textInput) {
+    const extensions = [...bindings, preCode,]
+    var converter = new showdown.Converter({"extensions":extensions })
+    // converter.addExtension(customClassExt);
+    let markdown = textInput
+    let markedContent = converter.makeHtml(markdown);
+    let sanitizedContent = DOMPurify.sanitize(markedContent)
+    return DOMPurify.sanitize(sanitizedContent)
+}
+const markdownElements = document.getElementsByClassName('markdown')
+for (let el of markdownElements) {
+    el.innerHTML = inputToSafeMarkdown(el.innerHTML)
+    el.classList.remove('hidden')
+}
+if (hljs) {
+    hljs.highlightAll();
+}

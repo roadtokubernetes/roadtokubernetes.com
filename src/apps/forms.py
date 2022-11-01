@@ -63,51 +63,31 @@ class AppModelForm(forms.ModelForm):
                 except Exception as errors:
                     for e in errors:
                         self.add_error("custom_domain_names", f"{_name}: {e} ")
-        return names
+        return ",".join(names)
 
 
-class AppCreateForm(forms.Form):
-    label = forms.CharField()
-    container = forms.CharField(
-        initial="nginx",
-        help_text="Since Kubernetes runs containers, this is where we must start.",
-    )
-    container_port = forms.CharField(initial="8000", required=True)
-    database = forms.ChoiceField(
-        widget=forms.Select,
-        label="Database (optional)",
-        choices=DatabaseChoices.choices,
-        required=False,
-    )
-    allow_internet_traffic = forms.ChoiceField(
-        widget=forms.Select,
-        label="Allow Internet Traffic (optional)",
-        choices=ExternalIngressChoices.choices,
-        initial=ExternalIngressChoices.ENABLE,
-        required=True,
-    )
-    custom_domain_names = forms.CharField(
-        required=False, help_text="Separate domains by comma"
-    )
-    # label = forms.CharField(required=False)
-    # description = forms.CharField(required=False)
+class AppModelUpdateForm(AppModelForm):
+    namespace = forms.SlugField(initial="apps", help_text="")
 
-    def clean_custom_domain_names(self):
-        data = self.cleaned_data.get("custom_domain_names")
-        if not data:
-            return
-        names = [x.strip() for x in data.split(",")]
-        for _name in names:
-            if _name.startswith("http"):
-                try:
-                    validators.url_validator(_name)
-                except Exception as errors:
-                    for e in errors:
-                        self.add_error("custom_domain_names", f"{_name}: {e}")
-            if not _name.startswith("http"):
-                try:
-                    validators.url_validator(f"http://{_name}")
-                except Exception as errors:
-                    for e in errors:
-                        self.add_error("custom_domain_names", f"{_name}: {e} ")
-        return names
+    class Meta:
+        model = App
+        fields = [
+            "label",
+            "namespace",
+            "container",
+            "container_port",
+            "image_pull_policy",
+            "replicas",
+            "database",
+            "allow_internet_traffic",
+            "custom_domain_names",
+        ]
+        help_texts = {
+            "container": "Only public images are supported at this time",
+            "image_pull_policy": "Select how often kubernetes should pull this image. Default: Always",
+            "replicas": "Number of times Kubernetes should have this running.",
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["image_pull_policy"].widget.attrs.update({"class": "mb-0"})

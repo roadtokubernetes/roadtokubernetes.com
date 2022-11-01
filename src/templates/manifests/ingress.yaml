@@ -11,20 +11,20 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-send-timeout: "360"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "360"
 
-spec:
-  # required to trigger cert being made/requested
-  tls:
-    - hosts:
-      - www.roadtokubernetes.com
-      secretName: tls-www-roadtokubernetes
-  rules:
-  - host: www.roadtokubernetes.com
-    http:
-      paths:
-      - backend:
-          service: 
-            name: www-roadtokubernetes-com-service
-            port:
-              number: 80
-        path: /
-        pathType: Prefix
+# spec:
+#   # required to trigger cert being made/requested
+#   tls:
+#     - hosts:
+#       - www.roadtokubernetes.com
+#       secretName: tls-www-roadtokubernetes
+#   rules:
+#   - host: www.roadtokubernetes.com
+#     http:
+#       paths:
+#       - backend:
+#           service: 
+#             name: www-roadtokubernetes-com-service
+#             port:
+#               number: 80
+#         path: /
+#         pathType: Prefix

@@ -16,6 +16,7 @@ Including another URLconf
 from articles import views as articles_views
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.flatpages import views as flatpages_views
 from django.urls import include, path, re_path
 from django.views.generic import RedirectView, TemplateView
 
@@ -36,13 +37,17 @@ urlpatterns = [
     path("search", RedirectView.as_view(url="/search/")),
     path("search/", articles_views.SearchView.as_view(), name="search"),
     path("u/", include("profiles.urls")),
-    path("about/", TemplateView.as_view(template_name="coming-soon.html")),
-    path("contact/", TemplateView.as_view(template_name="coming-soon.html")),
     path("generator/", TemplateView.as_view(template_name="coming-soon.html")),
-    path("privacy/", TemplateView.as_view(template_name="coming-soon.html")),
-    path("sponsors/", TemplateView.as_view(template_name="coming-soon.html")),
     path("admin/", admin.site.urls),
     path("webhooks/blog/", include("gh.webhooks")),
+]
+
+
+urlpatterns += [
+    path("about/", flatpages_views.flatpage, {"url": "/about/"}, name="about"),
+    path("contact/", flatpages_views.flatpage, {"url": "/contact/"}, name="contact"),
+    path("sponsors/", flatpages_views.flatpage, {"url": "/sponsors/"}, name="sponsors"),
+    path("privacy/", flatpages_views.flatpage, {"url": "/privacy/"}, name="privacy"),
 ]
 
 if settings.DEBUG:

@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views.generic import CreateView, ListView, UpdateView
 from projects.models import Project
 
-from .forms import AppModelForm
+from .forms import AppModelForm, AppModelUpdateForm
 from .models import App
 
 
@@ -44,7 +44,7 @@ apps_list_view = AppsListView.as_view()
 
 class AppsDetailView(SuccessMessageMixin, UpdateView):
     template_name = "apps/update.html"
-    form_class = AppModelForm
+    form_class = AppModelUpdateForm
     success_message = "%(label)s was updated successfully"
 
     def get_context_data(self, **kwargs):

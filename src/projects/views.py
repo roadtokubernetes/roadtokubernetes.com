@@ -32,8 +32,6 @@ def projects_choices_view(request):
             if qs_exists:
                 request.session["project_id"] = project_id
                 request.project = qs.first()
-                # console_url = cfehome_urls(request)['console_url']
-                # return HttpResponseClientRedirect(console_url)
                 return HttpResponseClientRefresh()
     queryset = queryset[:10]
     return render(

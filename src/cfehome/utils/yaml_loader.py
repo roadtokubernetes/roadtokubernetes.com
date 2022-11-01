@@ -1,5 +1,5 @@
+import yaml
 from yaml import dump as _dump
-from yaml import load as _load
 
 try:
     from yaml import CDumper as Dumper
@@ -12,5 +12,5 @@ def dump(*args, **kwargs):
     return _dump(*args, **kwargs, Dumper=Dumper)
 
 
-def load(*args, **kwargs):
-    return _load(*args, **kwargs, Loader=Loader)
+def load(content):
+    return yaml.safe_load(str(content))

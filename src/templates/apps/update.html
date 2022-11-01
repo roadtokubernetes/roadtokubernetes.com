@@ -18,20 +18,29 @@
             <button class="inline-block p-4 rounded-t-lg border-b-2" id="manifests-tab" data-tabs-target="#manifests" type="button" role="tab" aria-controls="manifests" aria-selected="false">Manifests</button>
         </li>
         <li class="mr-2" role="presentation">
-            <button class="inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="edit-tab" data-tabs-target="#edit" type="button" role="tab" aria-controls="edit" aria-selected="false">Edit</button>
+            
+            <button class="inline-block p-4 rounded-t-lg border-b-2 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="edit-tab" data-tabs-target="#edit" type="button" role="tab" aria-controls="edit" aria-selected="false">Edit</button>
         </li>
+        {% if object.has_database %}
+        <li class="mr-2" role="presentation">
+            <button class="inline-block p-4 rounded-t-lg border-b-2 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="db-tab" data-tabs-target="#db" type="button" role="tab" aria-controls="edit" aria-selected="false">Database</button>
+        </li>
+        {% endif %}
     </ul>
 </div>
 <div id="myTabContent">
     <div class="hidden bg-gray-50 rounded-lg dark:bg-gray-800" id="manifests" role="tabpanel" aria-labelledby="manifests-tab">
-        
         {% if manifests %}<div class='markdown'>{{ manifests|safe }}</div>{% endif %}
-    
     </div>
 
     <div class="hidden p-4 bg-gray-50 rounded-lg dark:bg-gray-800" id="edit" role="tabpanel" aria-labelledby="edit-tab">
         {% include 'apps/form.html' with btn_label="Update" %}
     </div>
+    {% if object.has_database %}
+    <div class="hidden p-4 bg-gray-50 rounded-lg dark:bg-gray-800" id="db" role="tabpanel" aria-labelledby="db-tab">
+       <div class='markdown'>{{ object.database|safe }}</div>
+    </div>
+    {% endif %}
 </div>
 
 

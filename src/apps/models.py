@@ -1,5 +1,6 @@
 import uuid
 
+import yaml
 from cfehome.utils import yaml_loader
 from django.conf import settings
 from django.db import models
@@ -7,6 +8,8 @@ from django.template.loader import render_to_string
 from django.utils.text import slugify
 from django_hosts.resolvers import reverse as hosts_reverse
 from projects.models import Project
+
+from . import renderers, validators
 
 User = settings.AUTH_USER_MODEL
 
@@ -27,6 +30,11 @@ class ExternalIngressChoices(models.IntegerChoices):
     __empty__ = "Select to allow internet traffic:"
 
 
+class ImagePullPolicyChoices(models.TextChoices):
+    ALWAYS = "Always", "Always"
+    IF_NOT_PRESENT = "IfNotPresent", "If not already present"
+
+
 class App(models.Model):
     uuid = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
@@ -34,9 +42,19 @@ class App(models.Model):
         Project, null=True, blank=True, on_delete=models.SET_NULL
     )
     label = models.CharField(max_length=120, null=True, blank=True)
+    namespace = models.SlugField(null=True, blank=True)
+    replicas = models.IntegerField(
+        default=1, validators=[validators.validate_replica_count]
+    )
     container = models.TextField(null=True, blank=True, help_text="Include any tag")
     container_port = models.CharField(
         max_length=120, null=True, blank=True, default="8000"
+    )
+    image_pull_policy = models.CharField(
+        max_length=120,
+        help_text="When should Kubernetes pull this image",
+        choices=ImagePullPolicyChoices.choices,
+        default=ImagePullPolicyChoices.ALWAYS,
     )
     database = models.CharField(
         max_length=120,
@@ -84,6 +102,10 @@ class App(models.Model):
         return "ClusterIP"
 
     @property
+    def service_port(self):
+        return 80
+
+    @property
     def service_label(self):
         return f"{self.k8s_label}-srv"
 
@@ -95,6 +117,18 @@ class App(models.Model):
     def container_port_label(self):
         return f"{self.k8s_label}-cp"
 
+    @property
+    def ingress_label(self):
+        return f"{self.k8s_label}-ingress"
+
+    @property
+    def has_database(self):
+        return self.database is not DatabaseChoices.EMPTY
+
+    @property
+    def _namespace(self):
+        return self.namespace or "apps"
+
     def get_container_environment_variables(self):
         return [{"name": "PORT", "value": self.container_port}]
 
@@ -103,35 +137,33 @@ class App(models.Model):
             {"name": f"{self.container_port_label}", "value": int(self.container_port)}
         ]
 
+    def get_domain_names(self):
+        domains = self.custom_domain_names
+        if domains is "" or domains is None:
+            return []
+        domains = [x.strip() for x in domains.split(",")]
+        return domains
+
     def get_container_details(self):
         return {
             "name": self.container_label,
             "image": self.container,
-            "imagePullPolicy": "Always",
+            "imagePullPolicy": self.image_pull_policy,
             "envFrom": [],
             "env": self.get_container_environment_variables(),
             "ports": self.get_container_ports(),
         }
 
-    def get_manifests(self):
+    def get_manifests(self, as_dict=False):
         container_details = self.get_container_details()
         containers = [container_details]
-        namespace = "apps"
 
-        deployment_data = {
-            "apiVersion": "apps/v1",
-            "kind": "Deployment",
-            "metadata": {"namespace": f"{namespace}", "name": self.deployment_label},
-            "spec": {
-                "replicas": 3,
-                "selector": {"matchLabels": {"app": self.deployment_label}},
-            },
-            "template": {
-                "metadata": {"labels": {"app": self.deployment_label}},
-                "spec": {"containers": containers},
-            },
-        }
-        service_type = "ClusterIP"
+        deployment_yaml = renderers.get_deployment_manifest(
+            name=self.deployment_label,
+            namespace=self._namespace,
+            replicas=self.replicas,
+            containers=containers,
+        )
         ports = [
             {
                 "name": "http",
@@ -140,23 +172,36 @@ class App(models.Model):
                 "targetPort": self.container_port_label,
             }
         ]
-        service_data = {
-            "apiVersion": "v1",
-            "kind": "Service",
-            "metadata": {"namespace": f"{namespace}", "label": self.service_label},
-            "spec": {
-                "type": service_type,
-                "ports": ports,
-                "selector": self.deployment_label,
-            },
-        }
-        deployment_yaml = yaml_loader.dump(deployment_data).strip()
-        service_yaml = yaml_loader.dump(service_data).strip()
-        service_yaml = f"\n---\n{service_yaml}"
-        doc = """{deployment_yaml} {service_yaml}
-        """.format(
-            deployment_yaml=deployment_yaml, service_yaml=service_yaml
+        namespace_yaml = renderers.get_namespace_manifest(namespace=self._namespace)
+        service_yaml = renderers.get_service_manifest(
+            name=self.service_label,
+            deployment_name=self.deployment_label,
+            namespace=self._namespace,
+            service_type=self.service_type,
+            ports=ports,
         )
+        manifest_docs = [namespace_yaml, deployment_yaml, service_yaml]
+        ingress_yaml = None
+        if self.allow_internet_traffic:
+            domains = self.get_domain_names()
+            ingress_yaml = renderers.get_ingress_manifest(
+                domains=domains,
+                namespace=self._namespace,
+                name=self.ingress_label,
+                service_name=self.service_label,
+                service_port=self.service_port,
+            )
+            manifest_docs.append(ingress_yaml)
+        if as_dict:
+            manifest_data = {
+                "namespace": yaml_loader.load(namespace_yaml),
+                "deployment": yaml_loader.load(deployment_yaml),
+                "service": yaml_loader.load(service_yaml),
+            }
+            if ingress_yaml is not None:
+                manifest_data["ingress"] = yaml_loader.load(ingress_yaml)
+            return manifest_data
+        doc = "\n\n---\n".join(manifest_docs)
         return doc.strip()
 
     def get_manifests_markdown(self):
