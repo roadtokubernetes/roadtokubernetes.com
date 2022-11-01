@@ -1,0 +1,14 @@
+{% extends "console/base.html" %}
+
+
+{% block content %}
+<h2 class="mb-4 text-3xl font-extrabold tracking-tight leading-none text-gray-900 md:text-4xl dark:text-white">
+    Create App Config
+</h2>
+<p class="mb-6 text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
+   Automate how you create & manage k8s manifests for your apps.
+</p>
+
+{% include 'apps/form.html' %}
+
+{% endblock %}

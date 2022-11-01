@@ -1,0 +1,38 @@
+{% extends "console/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+{% include 'console/page-breadcrumb.html' with list_title="Apps" list_url=apps_list_url object=object %}
+
+<div class="mb-5 ">
+    <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">     
+    {{ object.title }}
+    </h1>
+</div>
+
+    
+
+<div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
+        <li class="mr-2" role="presentation">
+            <button class="inline-block p-4 rounded-t-lg border-b-2" id="manifests-tab" data-tabs-target="#manifests" type="button" role="tab" aria-controls="manifests" aria-selected="false">Manifests</button>
+        </li>
+        <li class="mr-2" role="presentation">
+            <button class="inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="edit-tab" data-tabs-target="#edit" type="button" role="tab" aria-controls="edit" aria-selected="false">Edit</button>
+        </li>
+    </ul>
+</div>
+<div id="myTabContent">
+    <div class="hidden bg-gray-50 rounded-lg dark:bg-gray-800" id="manifests" role="tabpanel" aria-labelledby="manifests-tab">
+        
+        {% if manifests %}<div class='markdown'>{{ manifests|safe }}</div>{% endif %}
+    
+    </div>
+
+    <div class="hidden p-4 bg-gray-50 rounded-lg dark:bg-gray-800" id="edit" role="tabpanel" aria-labelledby="edit-tab">
+        {% include 'apps/form.html' with btn_label="Update" %}
+    </div>
+</div>
+
+
+{% endblock %}

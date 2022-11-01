@@ -18,8 +18,12 @@
             {% include 'console/sidebar.html' %}
             <div class="flex-auto px-5">
                 {% include 'base/messages.html' %}
-                {% block content %}
-                {% endblock content %}
+                {% if not request.session.project_id and "/apps/" in request.path %}
+                 {% include 'projects/snippets/project_required.html' %}
+                {% else %}
+                    {% block content %}
+                    {% endblock content %}
+                {% endif %}
             </div>
         </div>
     </div>

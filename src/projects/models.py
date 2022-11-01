@@ -34,3 +34,4 @@ class Project(models.Model):
         if self.label is not None:
             return f"{self.label}"
         return f"{self.project_id}" 
+    

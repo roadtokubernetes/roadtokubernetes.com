@@ -16,3 +16,4 @@ django-admin-rangefilter
 markdown
 django-crispy-forms
 crispy-tailwind
+pyyaml

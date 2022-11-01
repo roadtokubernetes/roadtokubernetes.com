@@ -96,11 +96,12 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "cfehome.context_processors.cfehome_urls",
-                "projects.context_processors.projects_context",
+                "console.context_processors.console_context",
             ],
         },
     },
 ]
+MANIFESTS_DIR = BASE_DIR / "templates" / "manifests"
 
 WSGI_APPLICATION = "cfehome.wsgi.application"
 

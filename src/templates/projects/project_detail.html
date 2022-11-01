@@ -3,7 +3,9 @@
 {% block head_title %}Project - {{ block.super }}{% endblock %}
 
 {% block content %}
-{% include 'projects/project_breadcrumbs.html' with project=project %}
+
+{% include 'console/page-breadcrumb.html' with list_title="Projects" list_url=projects_list_url object=object %}
+
 <div class="flex text-center">
     <h2 class="mb-4 text-3xl font-extrabold tracking-tight leading-none text-gray-900 md:text-4xl dark:text-white">
         {{ object.display_label }} 

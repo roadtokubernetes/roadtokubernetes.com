@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ deployment_label }}
+  namespace: {{ namespace }}
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: {{ deployment_label }}
+  template:
+    metadata:
+      labels:
+        app: {{ deployment_label }}
+    spec:
+      containers:
+        - name: {{ container_label }}
+          image: {{ container_image }}
+          imagePullPolicy: Always
+          {% if deployment_secrets %}
+          {% for secret_label in deployment_secrets %}
+          envFrom:
+          - secretRef:
+              name: {{ secret_label }}
+          {% endfor %}
+          {% endif %}
+          {% if environment_vars %}
+          {% for key, val in environment_vars.items %}
+          envFrom:
+          - secretRef:
+              name: {{ secret_label }}
+          {% endfor %}
+          {% endif %}
+          env:
+            - name: PORT
+              value: "{{ container_port }}"
+            {% if environment_vars %}
+            {% for key, val in environment_vars.items %}
+            - name: {{ key }}
+              value: {{ val }}
+            {% endfor %}
+            {% endif %}
+          ports:
+            - name: {{ container_port_label }}
+              containerPort: {{ container_port }}

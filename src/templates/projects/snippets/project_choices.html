@@ -1,8 +1,10 @@
+{% with "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" as unselected_project_dropdown %}
 <div class="mb-4" id="project-choice-container">
     <form hx-post="{{ projects_select_url }}" hx-trigger="change" hx-swap="outerhtml" hx-target="#project-choice-container" >
-        <label for="current-project" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Current project</label>
-        <select name='project_id'  id='current-project' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-            <option>----</option>
+        <label for="current-project" 
+                class="{% if label_hide %}hidden mb-2{% else %}block mb-2 text-sm font-medium  text-gray-900 dark:text-gray-400{% endif %}">Project</label>
+        <select name='project_id'  id='current-project' class=" {% if request.session.project_id %}bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 {% else %}{{ unselected_project_dropdown }}{% endif %} ">
+            <option>---- Select a project ----</option>
             {% for project_object in object_list %}
             <option value="{{ project_object.project_id }}" {% if request.session.project_id == project_object.project_id%}selected='selected'{% endif %}>{{ project_object.display_label }}</option>
             {% endfor %}
@@ -11,3 +13,4 @@
         </select>
     </form>
 </div>
+{% endwith %}

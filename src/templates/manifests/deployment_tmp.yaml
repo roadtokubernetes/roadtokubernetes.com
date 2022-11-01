@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: www-roadtokubernetes-com-deployment
+  namespace: www
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: www-roadtokubernetes-com-deployment
+  template:
+    metadata:
+      labels:
+        app: www-roadtokubernetes-com-deployment
+    spec:
+      containers:
+        - name: www-roadtokubernetes-com-container
+          image: roadtokubernetes/roadtokubernetes.com:latest
+          imagePullPolicy: Always
+          envFrom:
+          - secretRef:
+              name: www-roadtokubernetes-com-prod-env
+          - secretRef:
+              name: postgres-roadtok8s-db-secret
+          env:
+            - name: PORT
+              value: "8000"
+          ports:
+            - name: www-k8s-port
+              containerPort: 8000
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: www-k8s-port
+            failureThreshold: 1
+            periodSeconds: 10
+            initialDelaySeconds: 30
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: www-k8s-port
+            failureThreshold: 30
+            periodSeconds: 10
+            initialDelaySeconds: 30
