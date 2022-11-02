@@ -1,5 +1,6 @@
-from cfehome.utils import yaml_loader
 from django.template.loader import render_to_string
+
+from cfehome.utils import yaml_loader
 
 
 def get_deployment_manifest(
