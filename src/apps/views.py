@@ -3,22 +3,17 @@ from statistics import quantiles
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.utils.text import slugify
 from django.views.generic import CreateView, ListView, UpdateView
 from django_htmx.http import HttpResponseClientRefresh
+
 from projects.models import Project
 
 from . import utils
 from .forms import AppModelForm, AppModelUpdateForm
-from .models import (
-    App,
-    AppEnvVariable,
-    AppSecretVariable,
-    AppVariable,
-    AppVariableChoices,
-)
+from .models import App, AppVariable, AppVariableChoices
 
 
 class AppCreateFormView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
@@ -26,6 +21,11 @@ class AppCreateFormView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     form_class = AppModelForm
     # success_url = "/apps/create/"
     success_message = "App created"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["request"] = self.request
+        return kwargs
 
     def form_valid(self, form):
         obj = form.save(commit=False)
@@ -59,7 +59,15 @@ apps_list_view = AppsListView.as_view()
 class AppsDetailView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     template_name = "apps/update.html"
     form_class = AppModelUpdateForm
-    success_message = "%(label)s was updated successfully"
+    success_message = "%(name)s was updated successfully"
+    slug_field = "app_id"
+    slug_url_kwarg = "app_id"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+
+        kwargs["request"] = self.request
+        return kwargs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -68,10 +76,20 @@ class AppsDetailView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
             context["manifests"] = obj.get_manifests_markdown()
         return context
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        self.request.session["app_editing"] = False
+        return response
+
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        self.request.session["app_editing"] = True
+        return response
+
     def get_queryset(self):
-        # project_id = self.request.session.get("project_id")
-        # if project_id:
-        #     return App.objects.filter(project__project_id=project_id)
+        project_id = self.request.session.get("project_id")
+        if project_id:
+            return App.objects.filter(project__project_id=project_id)
         return App.objects.filter(user=self.request.user)
 
     def get_form(self, *args, **kwargs):
@@ -84,6 +102,20 @@ class AppsDetailView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
 
 
 apps_detail_view = AppsDetailView.as_view()
+
+
+apps_detail_backup_view = AppsDetailView.as_view()
+
+
+def apps_manifest_download_view(request, pk=None):
+    if not request.user.is_authenticated:
+        return HttpResponse("Please login", status=400)
+    app = App.objects.filter(pk=pk, user=request.user).first()
+    if not app:
+        raise Http404
+    response = HttpResponse(app.get_manifests(), content_type="text/plain")
+    response["Content-Disposition"] = f"attachment; filename={app.k8s_label}.yaml"
+    return response
 
 
 def apps_env_validate_key(request):

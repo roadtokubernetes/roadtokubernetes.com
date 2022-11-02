@@ -43,7 +43,10 @@ class App(models.Model):
     project = models.ForeignKey(
         Project, null=True, blank=True, on_delete=models.SET_NULL
     )
-    label = models.CharField(max_length=120, null=True, blank=True)
+    name = models.CharField(
+        max_length=120,
+    )
+    app_id = models.SlugField(blank=True, null=True)
     namespace = models.SlugField(null=True, blank=True)
     replicas = models.IntegerField(
         default=1, validators=[validators.validate_replica_count]
@@ -78,9 +81,13 @@ class App(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        unique_together = ("project", "name")
+
     def save(self, *args, **kwargs):
         if not self.namespace:
             self.namespace = "apps"
+        self.app_id = slugify(self.name)
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -92,21 +99,36 @@ class App(models.Model):
 
     @property
     def title(self):
-        if self.label:
-            return self.label
+        if self.name:
+            return self.name
         return self.container
 
     def get_absolute_url(self):
-        return hosts_reverse("apps:detail", kwargs={"pk": self.uuid}, host="console")
+        if not self.app_id:
+            return hosts_reverse(
+                "apps:detail-backup", kwargs={"pk": self.pk}, host="console"
+            )
+        return hosts_reverse(
+            "apps:detail", kwargs={"app_id": self.app_id}, host="console"
+        )
 
     def get_inputs_url(self):
-        return hosts_reverse("apps:inputs", kwargs={"pk": self.uuid}, host="console")
+        return hosts_reverse(
+            "apps:inputs", kwargs={"app_id": self.app_id}, host="console"
+        )
 
     def get_secrets_url(self):
-        return hosts_reverse("apps:secrets", kwargs={"pk": self.uuid}, host="console")
+        return hosts_reverse(
+            "apps:secrets", kwargs={"app_id": self.app_id}, host="console"
+        )
 
     def get_env_url(self):
-        return hosts_reverse("apps:env", kwargs={"pk": self.uuid}, host="console")
+        return hosts_reverse("apps:env", kwargs={"app_id": self.app_id}, host="console")
+
+    def get_download_url(self):
+        return hosts_reverse(
+            "apps:download", kwargs={"app_id": self.app_id}, host="console"
+        )
 
     @property
     def k8s_label(self):
@@ -180,7 +202,10 @@ class App(models.Model):
 
     def get_container_ports(self):
         return [
-            {"name": f"{self.container_port_label}", "containerPort": int(self.container_port)}
+            {
+                "name": f"{self.container_port_label}",
+                "containerPort": int(self.container_port),
+            }
         ]
 
     def get_domain_names(self):

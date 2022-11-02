@@ -1,9 +1,11 @@
 from django import forms
-from django.core.validators import URLValidator
+from django.conf import settings
+from django.utils.text import slugify
 
 from . import validators
 from .models import App, DatabaseChoices, ExternalIngressChoices
 
+BASE_URL = settings.BASE_URL
 DB_CHOICES = DatabaseChoices.choices
 
 EXTERNAL_TRAFFIC_CHOICES = ExternalIngressChoices.choices
@@ -25,25 +27,55 @@ class AppModelForm(forms.ModelForm):
     # )
     allow_internet_traffic = forms.ChoiceField(
         widget=forms.Select,
-        label="Allow Internet Traffic (optional)",
+        label="Allow Internet Traffic",
         choices=EXTERNAL_TRAFFIC_CHOICES,
-        initial=ExternalIngressChoices.ENABLE,
+        initial=ExternalIngressChoices.DISABLE,
         required=True,
     )
     custom_domain_names = forms.CharField(
         required=False, help_text="Separate domains by comma"
     )
 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = App
         fields = [
-            "label",
+            "name",
             "container",
             "container_port",
             # "database",
             "allow_internet_traffic",
             "custom_domain_names",
         ]
+
+    def clean_name(self):
+        name = self.cleaned_data.get("name")
+        if not name:
+            raise forms.ValidationError("An app name is required")
+        if self.instance:
+            """
+            Instance exists.
+            """
+            if self.instance.name == name:
+                """instance name did not change
+                return original name"""
+                return name
+        qs = App.objects.filter(
+            project__project_id=self.request.session.get("project_id"),
+        )
+        qs1 = qs.filter(name__iexact=name)
+        if qs1.exists():
+            raise forms.ValidationError(f"{name} already exists for this project.")
+        slug_name = slugify(name)
+        qs2 = qs.filter(app_id__iexact=slug_name)
+        if qs2.exists():
+            raise forms.ValidationError(
+                f"App id {slug_name} (from {name}) already exists for this project."
+            )
+        return name
 
     def clean_custom_domain_names(self):
         data = self.cleaned_data.get("custom_domain_names")
@@ -68,12 +100,18 @@ class AppModelForm(forms.ModelForm):
 
 class AppModelUpdateForm(AppModelForm):
     namespace = forms.SlugField(initial="apps", help_text="")
+    # app_id = forms.SlugField(widget=forms.ReadOnlyInput, required=False)
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super().__init__(*args, **kwargs)
 
     class Meta:
         model = App
         fields = [
             # "project",
-            "label",
+            "name",
+            "app_id",
             "namespace",
             "container",
             "container_port",
@@ -89,9 +127,11 @@ class AppModelUpdateForm(AppModelForm):
             "container": "Only public images are supported at this time",
             "image_pull_policy": "Select how often kubernetes should pull this image. Default: Always",
             "replicas": "Number of times Kubernetes should have this running.",
-            "tls_secret_name": "TLS secret name for generating the TLS certs.",
+            "tls_secret_name": f"TLS secret name for generating the TLS certs. <a class='underline text-blue-700' href='{BASE_URL}/blog/tls'>Learn more</a>",
+            "app_id": "The app id that will be used in the URL. It is auto-generated from the app name.",
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["image_pull_policy"].widget.attrs.update({"class": "mb-0"})
+        self.fields["app_id"].widget.attrs.update({"readonly": True, "disabled": True})

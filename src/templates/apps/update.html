@@ -17,11 +17,11 @@
 <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
     <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
         <li class="mr-2" role="presentation">
-            <button class="inline-block p-4 rounded-t-lg border-b-2" id="manifests-tab" data-tabs-target="#manifests" type="button" role="tab" aria-controls="manifests" aria-selected="false">Manifests</button>
+            <button class="inline-block p-4 rounded-t-lg border-b-2" id="manifests-tab" data-tabs-target="#manifests" type="button" role="tab" aria-controls="manifests" aria-selected="false">Manifest</button>
         </li>
         <li class="mr-2" role="presentation">
             
-            <button class="inline-block p-4 rounded-t-lg border-b-2 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="edit-tab" data-tabs-target="#edit" type="button" role="tab" aria-controls="edit" aria-selected="false">Edit</button>
+            <button class="inline-block p-4 rounded-t-lg border-b-2 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="edit-tab" data-tabs-target="#edit" type="button" role="tab" aria-controls="edit" aria-selected="{% if request.session.app_editing == True %}true{% else %}false{% endif %}">Edit</button>
         </li>
         {% if object.has_database %}
         <li class="mr-2" role="presentation">
@@ -38,13 +38,24 @@
         <li class="mr-2" role="presentation">
             <button class="inline-block p-4 rounded-t-lg border-b-2 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="secrets-tab" data-tabs-target="#secret-encoder" type="button" role="tab" aria-controls="secret-encoder" aria-selected="false">Secret Encoder</button>
         </li>
+        <li class="ml-auto hidden" role="presentation">
+            <a href="{{ object.get_download_url }}" class="{{submit_btn_class}} inline-block">{% include 'icons/cloud-download.html' %} Download</a>
+        </li>
     </ul>
 </div>
 <div id="myTabContent">
     <div class="hidden p-4" id="manifests" role="tabpanel" aria-labelledby="manifests-tab">
         <div class='mb-3'>
-            <h2 class="{{ tab_header_class }}">App Manifests</h2>
-            <p>All configuration for Kubernetes for this particular app is here. This manifest file has been automatically generated based on your configuration.</p>
+            <div class="flex">
+                <div class="flex-grow mr-2">
+                    <h2 class="{{ tab_header_class }}">App Manifests</h2>
+                    <p>All configuration for Kubernetes for this particular app is here. This manifest file has been automatically generated based on your configuration.</p>
+                </div>
+                <div>
+                <a href="{{ object.get_download_url }}" class="{{submit_btn_class}} inline-block">{% include 'icons/cloud-download.html' %} Download</a>
+            </div>
+            </div>
+            
         </div>
         <div class=" bg-gray-50 rounded-lg dark:bg-gray-800">
             {% if manifests %}<div class='markdown'>{{ manifests|safe }}</div>{% endif %}
