@@ -1,13 +1,14 @@
 import base64
 import uuid
 
-from cfehome.utils import yaml_loader
 from django.conf import settings
 from django.db import models
 from django.db.models import F
 from django.template.loader import render_to_string
 from django.utils.text import slugify
 from django_hosts.resolvers import reverse as hosts_reverse
+
+from cfehome.utils import yaml_loader
 from projects.models import Project
 
 from . import renderers, validators
