@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.utils import timezone
 from django.views import generic
 from django_htmx.http import HttpResponseClientRedirect, HttpResponseClientRefresh
 
@@ -30,8 +31,11 @@ def projects_choices_view(request):
             qs = queryset.filter(project_id=project_id)
             qs_exists = qs.exists()
             if qs_exists:
+                qs.update(last_activated=timezone.now())
                 request.session["project_id"] = project_id
-                request.project = qs.first()
+
+                # project_obj = qs.first()
+                # project_obj.last_activated = timezone.now()
                 return HttpResponseClientRefresh()
     queryset = queryset[:10]
     return render(

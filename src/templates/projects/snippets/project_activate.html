@@ -1,0 +1,10 @@
+{% if project_id %}
+{% with "mr-2 text-sm font-medium text-blue-600 hover:underline rounded hover:text-white hover:bg-blue-800 px-3 dark:text-blue-500" as unselected_project_dropdown %}
+{% with "mr-2 text-sm font-medium text-white bg-blue-600 rounded px-3 hover:underline dark:text-blue-500" as activated_project %}
+<form  class="{% if request.session.project_id == project_id %}{{ activated_project }}{% else %}{{ unselected_project_dropdown }}{% endif %}"hx-post="{{ projects_select_url }}" hx-trigger="submit" hx-swap="outerhtml" hx-target="#project-choice-container" >
+    <input type="hidden" name="project_id" value="{{ project_id }}" />
+    <button type="submit">{% if request.session.project_id == project_id %}Active{% else %}Select{% endif %}</button>
+</form>
+{% endwith %}
+{% endwith %}
+{% endif %}

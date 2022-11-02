@@ -27,6 +27,7 @@
                             </p>
                         </div>
                         <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                            {% include 'projects/snippets/project_activate.html' with project_id=object.project_id %}
                             <a class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500" href="{{ object.get_absolute_url }}">View</a>
                         </div>
                     </div>

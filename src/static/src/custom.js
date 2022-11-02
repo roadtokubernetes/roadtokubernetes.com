@@ -82,3 +82,33 @@ for (let el of markdownElements) {
 if (hljs) {
     hljs.highlightAll();
 }
+
+function dynamicInputElementButtonRemoval(){
+    const inputElementRemoveButton = document.getElementsByClassName("input-element-container-remove-button")
+    for (let el of inputElementRemoveButton) {
+        el.removeEventListener("click", null)
+        el.addEventListener("click", (e)=>{
+            e.preventDefault()
+            const dataset = el.dataset
+        
+            const removeConfirm = dataset.removeConfirm ? true : false
+            const isReady = dataset.ready ? true : false
+            if (!isReady) {
+                let parentContainerEl = el.closest(".input-element-container")
+                console.log(removeConfirm)
+                if (removeConfirm) {
+                    if (confirm("Are you sure you want to remove this?") == true){
+                        parentContainerEl.remove()
+                    }
+                } else {
+                    parentContainerEl.remove()
+                }
+                el.dataset['ready'] = true
+            }
+        })
+    }
+}
+dynamicInputElementButtonRemoval()
+document.body.addEventListener('htmx:afterSwap', function(evt) {
+    dynamicInputElementButtonRemoval()
+});

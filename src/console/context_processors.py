@@ -6,6 +6,7 @@ def console_context(*args, **kwargs):
     return {
         "base_url": settings.BASE_URL,
         "console_url": settings.CONSOLE_URL,
+        "validate_env_key_url": hosts_reverse("apps:validate-env-key", host="console"),
         "apps_create_url": hosts_reverse("apps:create", host="console"),
         "apps_list_url": hosts_reverse("apps:list", host="console"),
         "projects_choices_url": hosts_reverse("projects:choices", host="console"),

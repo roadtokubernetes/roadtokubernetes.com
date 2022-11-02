@@ -1,0 +1,44 @@
+
+
+
+
+
+    
+
+{% for object in object_list %}
+
+<div class="input-element-container mb-6 ">
+    <div id="validate-target-{{ object.id }}" class="validate-target"></div>
+
+    <div class="flex items-end">
+    <div class="mb-1 flex-grow grid gap-6 {% if object.encoded %}md:grid-cols-3{% else %} md:grid-cols-2{% endif %} ">
+        <div>
+            
+            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Key/Name</label>
+            <input hx-post="{{ validate_env_key_url }}" 
+                hx-sync="closest form:abort"
+                hx-target="#validate-target-{{ object.id }}"
+                hx-params="name"
+                hx-trigger="keyup" type="text" id="name" value="{{ object.key }}" name="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Key/Name" required>
+        </div>
+
+        <div>
+            <label for="value" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Value</label>
+            <input type="text" id="value" name="value" value="{{ object.value }}"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Value" required>
+        </div>
+
+        {% if object.encoded %}
+        <div>
+            <label for="value_encoded" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Encoded Value</label>
+            <input type="text" id="value_encoded" readonly value="{{ object.encoded }}"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Value" required>
+        </div>
+        {% endif %}
+
+    </div>
+    <div class="">
+        <button class="mx-2 p-4 input-element-container-remove-button" data-remove-confirm="true">X</button>
+    </div>
+</div>
+</div>
+    {% endfor %}
+

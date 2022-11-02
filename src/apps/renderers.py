@@ -51,11 +51,23 @@ def get_service_manifest(
     return yaml_loader.dump(data).strip()
 
 
+def get_secrets_manifest(name="secret", namespace="default", data={}):
+    _data = {
+        "apiVersion": "v1",
+        "kind": "Secret",
+        "metadata": {"namespace": f"{namespace}", "name": name},
+        "type": "Opaque",
+        "data": data,
+    }
+    return yaml_loader.dump(_data).strip()
+
+
 def get_ingress_manifest(
     domains=[],
     namespace="default",
     name="ingress",
     service_name="service",
+    tls_secret_name=None,
     service_port=80,
 ):
     ingress_doc = render_to_string("manifests/ingress-insecure.yaml")
@@ -82,8 +94,11 @@ def get_ingress_manifest(
             },
         }
         ingress_rules.append(rule)
-    template_data["spec"] = {
-        "tls": {"secretName": "fill-in", "hosts": hosts},
+    spec = {
+        "tls": {"hosts": hosts},
         "rules": ingress_rules,
     }
+    if tls_secret_name is not None:
+        spec["tls"] = tls_secret_name
+    template_data["spec"] = spec
     return yaml_loader.dump(template_data).strip()

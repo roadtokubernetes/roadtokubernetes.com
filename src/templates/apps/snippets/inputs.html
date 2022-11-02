@@ -1,0 +1,31 @@
+{% load random_int %}
+{% random_int as this_int %}
+<div class="input-element-container mb-6 ">
+<div id="validate-target-{{ this_int }}" class="validate-target"></div>
+
+
+<div class="flex items-end">
+    <div class="flex-grow grid gap-6 md:grid-cols-2 mb-1">
+
+        <div>
+            
+            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Key/Name</label>
+            <input hx-post="{{ validate_env_key_url }}" 
+                hx-sync="closest form:abort"
+                hx-target="#validate-target-{{ this_int }}"
+                hx-params="name"
+                hx-trigger="keyup" type="text" id="name" name="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Key/Name" required>
+        </div>
+
+        <div>
+            <label for="value" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Value</label>
+            <input type="text" id="value" name="value" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Value" required>
+        </div>
+    
+
+    </div>
+    <div class="">
+        <button class="mx-2 p-4 input-element-container-remove-button">X</button>
+    </div>
+</div>
+</div>

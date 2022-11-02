@@ -3,7 +3,9 @@
 
 {% block content %}
 {% include 'console/page-breadcrumb.html' with list_title="Apps" list_url=apps_list_url object=object %}
-
+{% with "text-black dark:text-white bg-gray-200 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800" as add_button_class %}
+{% with "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" as submit_btn_class %}
+{% with 'text-lg font-extrabold tracking-tight leading-none text-gray-900 md:text-xl dark:text-white' as tab_header_class %}
 <div class="mb-5 ">
     <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">     
     {{ object.title }}
@@ -23,25 +25,90 @@
         </li>
         {% if object.has_database %}
         <li class="mr-2" role="presentation">
-            <button class="inline-block p-4 rounded-t-lg border-b-2 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="db-tab" data-tabs-target="#db" type="button" role="tab" aria-controls="edit" aria-selected="false">Database</button>
+            <button class="inline-block p-4 rounded-t-lg border-b-2 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="db-tab" data-tabs-target="#db" type="button" role="tab" aria-controls="db" aria-selected="false">Database</button>
         </li>
         {% endif %}
+        
+        <li class="mr-2" role="presentation">
+            <button class="inline-block p-4 rounded-t-lg border-b-2 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="db-tab" data-tabs-target="#env" type="button" role="tab" aria-controls="env" aria-selected="false">Env</button>
+        </li>
+        <li class="mr-2" role="presentation">
+            <button class="inline-block p-4 rounded-t-lg border-b-2 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="secrets-tab" data-tabs-target="#secrets" type="button" role="tab" aria-controls="secrets" aria-selected="false">Secrets</button>
+        </li>
+        <li class="mr-2" role="presentation">
+            <button class="inline-block p-4 rounded-t-lg border-b-2 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="secrets-tab" data-tabs-target="#secret-encoder" type="button" role="tab" aria-controls="secret-encoder" aria-selected="false">Secret Encoder</button>
+        </li>
     </ul>
 </div>
 <div id="myTabContent">
-    <div class="hidden bg-gray-50 rounded-lg dark:bg-gray-800" id="manifests" role="tabpanel" aria-labelledby="manifests-tab">
-        {% if manifests %}<div class='markdown'>{{ manifests|safe }}</div>{% endif %}
+    <div class="hidden p-4" id="manifests" role="tabpanel" aria-labelledby="manifests-tab">
+        <div class='mb-3'>
+            <h2 class="{{ tab_header_class }}">App Manifests</h2>
+            <p>All configuration for Kubernetes for this particular app is here. This manifest file has been automatically generated based on your configuration.</p>
+        </div>
+        <div class=" bg-gray-50 rounded-lg dark:bg-gray-800">
+            {% if manifests %}<div class='markdown'>{{ manifests|safe }}</div>{% endif %}
+        </div>
     </div>
 
-    <div class="hidden p-4 bg-gray-50 rounded-lg dark:bg-gray-800" id="edit" role="tabpanel" aria-labelledby="edit-tab">
-        {% include 'apps/form.html' with btn_label="Update" %}
+    <div class="hidden p-4" id="edit" role="tabpanel" aria-labelledby="edit-tab">
+        <div class='mb-3'>
+            <h2 class="{{ tab_header_class }}">Edit Configuration</h2>
+        </div>
+        <div class=" bg-gray-50 rounded-lg dark:bg-gray-800 p-3">
+            {% include 'apps/form.html' with btn_label="Update" %}
+        </div>
     </div>
     {% if object.has_database %}
-    <div class="hidden p-4 bg-gray-50 rounded-lg dark:bg-gray-800" id="db" role="tabpanel" aria-labelledby="db-tab">
-       <div class='markdown'>{{ object.database|safe }}</div>
+    <div class="hidden p-4" id="db" role="tabpanel" aria-labelledby="db-tab">
+        <div class='mb-3'>
+            <h2 class="{{ tab_header_class }}">Database App</h2>
+            <p>The following database apps are attached to this app:</p>
+        </div>
+        <div class=" bg-gray-50 rounded-lg dark:bg-gray-800 p-3">
+            <div class='markdown'>{{ object.database|safe }}</div>
+        </div>
     </div>
     {% endif %}
+    <div class="hidden p-4" id="env" role="tabpanel" aria-labelledby="env-tab">
+        <div class='mb-3'>
+            <h2 class="{{ tab_header_class }}">Environment Variables</h2>
+            <p><span class="font-bold bg-yellow-200 text-black px-3 py-1 rounded">Use non-sensitive values!</span> Environment variables are <span class='font-bold'>exposed directly</span> on the <span class="italic">deployment manifest</span> making them <span class='italic font-bold underline'>always insecure</span>.</p>
+        </div>
+        <div class=" bg-gray-50 rounded-lg dark:bg-gray-800 p-3">
+            <form hx-post="{{ object.get_env_url }}" hx-target="#env-inputs">
+                <div hx-get="{{ object.get_env_url }}" hx-trigger="revealed" id="env-inputs"></div>
+
+                <button hx-get="{{ object.get_inputs_url }}" hx-trigger="click" hx-target="#env-inputs" hx-swap="beforeend" class="{{ add_button_class }}">Add</button>
+                <button type="submit" class="{{ submit_btn_class }}">Save</button>
+            </form>
+        </div>
+    </div>
+     <div class="hidden p-4" id="secrets" role="tabpanel" aria-labelledby="secrets-tab">
+        <div class='mb-3'>
+            <h2 class="{{ tab_header_class }}">Secrets</h2>
+            <p><span class="font-bold bg-yellow-200 text-black px-3 py-1 rounded">Use placeholder values!</span> We <span class="font-bold">do not obstruct or secure</span> any entered values here. This tab is to generate the <span class="italic">secrets manifest</span>.</p>
+        </div>
+        <div class=" bg-gray-50 rounded-lg dark:bg-gray-800 p-3">
+            <form hx-post="{{ object.get_secrets_url }}" hx-target="#secrets-inputs">
+                <div hx-get="{{ object.get_secrets_url }}" hx-trigger="revealed" id="secrets-inputs"></div>
+                <button hx-get="{{ object.get_inputs_url }}" hx-trigger="click" hx-target="#secrets-inputs" hx-swap="beforeend" class="{{ add_button_class }}">Add</button>
+                <button type="submit" class="{{ submit_btn_class }}">Save</button>
+            </form>
+        </div>
+    </div>
+    <div class="hidden p-4" id="secret-encoder" role="tabpanel" aria-labelledby="secrets-tab">
+        <div class='mb-3'>
+            <h2 class="{{ tab_header_class }}">Secret Encoder</h2>
+            <p>Secrets must be stored as <code class="dark:text-rose-400 text-rose-600 text-left">Base64</code> values. Here's an in-browser tool (won't touch the server) to allow you to do so.</p>
+        </div>
+        <div class=" bg-gray-50 rounded-lg dark:bg-gray-800 p-3">
+            {% include 'apps/snippets/base64_encoder.html' %}
+        </div>
+    </div>
 </div>
 
-
+{% endwith %}
+{% endwith %}
+{% endwith %}
 {% endblock %}

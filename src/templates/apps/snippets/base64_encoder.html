@@ -1,0 +1,60 @@
+
+<div class="mb-6">
+ <h5  class="font-bold mb-2">Encoder</h5>
+<div class="grid gap-6  md:grid-cols-2">
+   
+    <div>
+        <label for="value" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Value</label>
+        <input type="text" id="base64-value-input" name="value" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Value" required>
+    </div>
+
+    <div>
+        <label for="value" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Value Encoded</label>
+        <input type="text" readonly  id="base64-value-output" name="value-encoded" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Value" required>
+    </div>
+</div>
+</div>
+
+
+<div class="mb-6">
+<h5 class="font-bold mb-2">Decoder</h5>
+<div class="grid gap-6 mb-6 md:grid-cols-2">
+   
+    <div>
+        <label for="value" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Value</label>
+        <input type="text" id="base64-decode-value-input" name="value" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Value" required>
+    </div>
+
+    <div>
+        <label for="value" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Value Encoded</label>
+        <input type="text" readonly  id="base64-decode-value-output" name="value-encoded" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Value" required>
+    </div>
+</div>
+</div>
+
+<script>
+    var b64InputEl = document.getElementById('base64-value-input')
+    var b64OutputEl = document.getElementById("base64-value-output")
+    var b64DecodeInputEl = document.getElementById('base64-decode-value-input')
+    var b64DecodeOutputEl = document.getElementById("base64-decode-value-output")
+
+    b64InputEl.addEventListener("keyup", (event)=>{
+        if (event){
+            event.preventDefault()
+            const inputVal = event.target.value
+            const encodedVal =  btoa(inputVal)
+            const decodedFromEncoded = atob(encodedVal)
+            b64OutputEl.value = encodedVal
+            b64DecodeInputEl.value = encodedVal
+            b64DecodeOutputEl.value = decodedFromEncoded
+        }
+    })
+
+    b64DecodeInputEl.addEventListener("keyup", (event)=>{
+        if (event){
+            event.preventDefault()
+            const inputVal = event.target.value
+            b64DecodeOutputEl.value = atob(inputVal)
+        }
+    })
+</script>
