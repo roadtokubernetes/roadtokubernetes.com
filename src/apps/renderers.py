@@ -76,9 +76,9 @@ def get_ingress_manifest(
     template_data["metadata"].update({"namespace": namespace, "name": name})
     hosts = [x for x in domains]
     ingress_rules = []
-    for host in hosts:
+    spec = {}
+    if len(domains) == 0:
         rule = {
-            "host": host,
             "http": {
                 "paths": [
                     {
@@ -95,8 +95,28 @@ def get_ingress_manifest(
             },
         }
         ingress_rules.append(rule)
+    else:
+        for host in hosts:
+            rule = {
+                "host": host,
+                "http": {
+                    "paths": [
+                        {
+                            "backend": {
+                                "service": {
+                                    "name": service_name,
+                                    "port": {"number": service_port},
+                                }
+                            },
+                            "path": "/",
+                            "pathType": "Prefix",
+                        }
+                    ]
+                },
+            }
+            ingress_rules.append(rule)
+        spec["tls"] = ({"hosts": hosts},)
     spec = {
-        "tls": {"hosts": hosts},
         "rules": ingress_rules,
     }
     if tls_secret_name is not None:
