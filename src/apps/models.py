@@ -180,7 +180,7 @@ class App(models.Model):
 
     def get_container_ports(self):
         return [
-            {"name": f"{self.container_port_label}", "value": int(self.container_port)}
+            {"name": f"{self.container_port_label}", "containerPort": int(self.container_port)}
         ]
 
     def get_domain_names(self):

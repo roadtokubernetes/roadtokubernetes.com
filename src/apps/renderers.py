@@ -13,10 +13,10 @@ def get_deployment_manifest(
         "spec": {
             "replicas": replicas,
             "selector": {"matchLabels": {"app": name}},
-        },
-        "template": {
-            "metadata": {"labels": {"app": name}},
-            "spec": {"containers": containers},
+            "template": {
+                "metadata": {"labels": {"app": name}},
+                "spec": {"containers": containers},
+            },
         },
     }
     return yaml_loader.dump(data).strip()
@@ -45,7 +45,7 @@ def get_service_manifest(
         "spec": {
             "type": service_type,
             "ports": ports,
-            "selector": deployment_name,
+            "selector": {"app": deployment_name},
         },
     }
 
