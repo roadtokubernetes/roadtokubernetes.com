@@ -25,6 +25,7 @@ FIXTURES_DIR = BASE_DIR / "fixtures"
 SECRET_KEY = config("DJANGO_SECRET_KEY", default=None)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
+REQUIRE_SSL = config("REQUIRE_SSL", cast=bool, default=True)
 DEBUG_HOSTNAME = config("DEBUG_HOSTNAME", default=None)
 PARENT_HOST = config("PARENT_HOST", default=None)
 BASE_URL = config("BASE_URL", default=None)
@@ -252,7 +253,7 @@ SECURE_FRAME_DENY = False
 CSRF_USE_SESSIONS = True
 SESSION_COOKIE_DOMAIN = config("SESSION_DOMAIN", default=PARENT_HOST)
 
-if not DEBUG:
+if REQUIRE_SSL:
     # CORS_REPLACE_HTTPS_REFERER      = True
     HOST_SCHEME = "https://"
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

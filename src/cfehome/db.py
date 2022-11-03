@@ -11,8 +11,6 @@ POSTGRES_DB_IS_AVAIL = all(
 )
 POSTGRES_DB_REQUIRE_SSL = config("POSTGRES_DB_REQUIRE_SSL", cast=bool, default=False)
 
-# if DJANGO_DEBUG:
-#     print(f"DB using {POSTGRES_HOST}:{POSTGRES_PORT}")
 if POSTGRES_DB_IS_AVAIL:
     DATABASES = {
         "default": {
