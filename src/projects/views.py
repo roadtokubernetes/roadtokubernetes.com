@@ -1,4 +1,4 @@
-from console.context_processors import console_context
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponse
@@ -6,6 +6,8 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.views import generic
 from django_htmx.http import HttpResponseClientRedirect, HttpResponseClientRefresh
+
+from console.context_processors import console_context
 
 from .forms import ProjectForm
 from .models import Project
@@ -43,6 +45,24 @@ def projects_choices_view(request):
         "projects/snippets/project_choices.html",
         {"object_list": queryset, "label_hide": label_hide},
     )
+
+
+def project_delete_view(request, project_id=None):
+    if not request.htmx:
+        return render(request, "400.html", status=400)
+    if not request.user.is_authenticated:
+        return render(request, "hx/login-required.html", status=400)
+    if request.method == "DELETE":
+        obj = Project.objects.filter(project_id=project_id, user=request.user).first()
+        if not obj:
+            messages.error(request, "Project is missing or no longer exists.")
+            return HttpResponseClientRedirect("/apps/")
+        messages.success(request, "Project deleted.")
+        if request.session.get("project_id") == project_id:
+            del request.session["project_id"]
+        obj.delete()
+        return HttpResponseClientRedirect("/projects/")
+    return HttpResponse("Not allowed", status=400)
 
 
 class ProjectDetailView(LoginRequiredMixin, SuccessMessageMixin, generic.UpdateView):

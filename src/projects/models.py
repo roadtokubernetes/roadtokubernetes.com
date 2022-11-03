@@ -34,8 +34,19 @@ class Project(models.Model):
             kwargs={"project_id": self.project_id},
         )
 
+    def get_delete_url(self):
+        return hosts_reverse(
+            "projects:delete",
+            host="console",
+            kwargs={"project_id": self.project_id},
+        )
+
     @property
     def display_label(self):
         if self.name is not None:
             return f"{self.name}"
         return f"{self.project_id}"
+
+    @property
+    def display_id(self):
+        return self.project_id

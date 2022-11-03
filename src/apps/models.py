@@ -96,6 +96,10 @@ class App(models.Model):
         return self.title
 
     @property
+    def display_id(self):
+        return self.app_id
+
+    @property
     def display_label(self):
         return f"{self.title}"
 

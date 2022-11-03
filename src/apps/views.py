@@ -242,9 +242,11 @@ def app_delete_view(request, app_id):
     if not request.user.is_authenticated:
         return HttpResponse("Please login", status=400)
     project_id = request.session.get("project_id")
-    obj = App.objects.filter(app_id=app_id, project__project_id=project_id).first()
-    if not obj:
-        messages.error(request, "App is missing or no longer exists.")
+    if request.method == "DELETE":
+        obj = App.objects.filter(app_id=app_id, project__project_id=project_id).first()
+        if not obj:
+            messages.error(request, "App is missing or no longer exists.")
+            return HttpResponseClientRedirect("/apps/")
+        obj.delete()
         return HttpResponseClientRedirect("/apps/")
-    obj.delete()
-    return HttpResponseClientRedirect("/apps/")
+    return HttpResponse("Not allowed", status=400)

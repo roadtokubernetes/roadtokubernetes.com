@@ -17,6 +17,7 @@ class AppRawSerializer(serializers.ModelSerializer):
                 "app_id",
                 "project_id",
                 "name",
+                "namespace",
                 "container",
                 "container_port",
                 "image_pull_policy",

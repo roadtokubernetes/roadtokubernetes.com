@@ -72,7 +72,7 @@
         <div class=" bg-gray-50 rounded-lg dark:bg-gray-800 p-3">
             {% include 'apps/form.html' with btn_label="Update" %}
         </div>
-        {% include 'apps/snippets/delete-block.html' with object=object %}
+        {% include 'base/delete-block.html' with object=object title="App" %}
     </div>
     {% if object.has_database %}
     <div class="hidden p-4" id="db" role="tabpanel" aria-labelledby="db-tab">
