@@ -5,18 +5,20 @@
 
 {% include 'console/page-header.html' with title='Apps' create_url=apps_create_url %}
 
-
+<div class="grid gap-6  md:grid-cols-2">
 
 
     {% for object in object_list %}
-    <a class="flex flex-col items-center bg-white mb-5 rounded-lg border shadow-md md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+    <a class="flex flex-col text-center items-center bg-white mb-5 rounded-lg border shadow-md md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
       href="{{ object.get_absolute_url }}">
-        <div class="flex flex-col justify-between p-4 leading-normal">
-            <h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">     
+        <div class="flex flex-col justify-between leading-normal mx-auto p-10">
+            <h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center">     
             {{ object.title }}
             </h5>
         </div>
     
     </a>
     {% endfor %}
+
+</div>
 {% endblock %}
