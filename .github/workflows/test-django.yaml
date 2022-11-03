@@ -35,6 +35,7 @@ jobs:
       BASE_URL: http://www.github-actions.com:8000
       PARENT_HOST: .github-actions.com:8000
       SESSION_DOMAIN: .github-actions.com
+      REQUIRE_SSL: 0
     services:
       postgres_main:
         image: postgres:12
