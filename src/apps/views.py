@@ -107,10 +107,10 @@ apps_detail_view = AppsDetailView.as_view()
 apps_detail_backup_view = AppsDetailView.as_view()
 
 
-def apps_manifest_download_view(request, pk=None):
+def apps_manifest_download_view(request, app_id=None):
     if not request.user.is_authenticated:
         return HttpResponse("Please login", status=400)
-    app = App.objects.filter(pk=pk, user=request.user).first()
+    app = App.objects.filter(app_id=app_id, user=request.user).first()
     if not app:
         raise Http404
     response = HttpResponse(app.get_manifests(), content_type="text/plain")
@@ -141,7 +141,7 @@ def apps_env_validate_key(request):
     return HttpResponse("")
 
 
-def apps_new_input_view(request, pk=None):
+def apps_new_input_view(request, app_id=None, *args, **kwargs):
     if not request.htmx:
         return HttpResponseBadRequest()
     return render(request, "apps/snippets/inputs.html", {})
