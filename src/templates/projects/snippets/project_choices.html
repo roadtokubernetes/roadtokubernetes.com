@@ -9,7 +9,7 @@
             <option value="{{ project_object.project_id }}" {% if request.session.project_id == project_object.project_id%}selected='selected'{% endif %}>{{ project_object.display_label }}</option>
             {% endfor %}
 
-            <option class='bg-sky-700 text-white' value="create">+ Create Project</option>
+            <option class='bg-blue-700 text-white' value="create">+ Create Project</option>
         </select>
     </form>
 </div>

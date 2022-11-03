@@ -13,12 +13,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from articles import views as articles_views
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.flatpages import views as flatpages_views
 from django.urls import include, path, re_path
 from django.views.generic import RedirectView, TemplateView
+
+from articles import views as articles_views
 
 from . import views
 
@@ -37,8 +38,17 @@ urlpatterns = [
     path("search", RedirectView.as_view(url="/search/")),
     path("search/", articles_views.SearchView.as_view(), name="search"),
     path("u/", include("profiles.urls")),
-    path("generator/", TemplateView.as_view(template_name="coming-soon.html")),
+    path(
+        "generator/",
+        TemplateView.as_view(template_name="coming-soon.html"),
+        name="generator",
+    ),
     path("admin/", admin.site.urls),
+    path(
+        "secrets-encoder",
+        TemplateView.as_view(template_name="utils/secrets-encoder.html"),
+        name="secrets-encoder",
+    ),
     path("webhooks/blog/", include("gh.webhooks")),
 ]
 

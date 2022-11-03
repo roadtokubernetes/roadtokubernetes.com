@@ -24,8 +24,57 @@
 </section>
 
 
-<div class="text-center">
+
+
+<div class="text-center my-16 pb-8">
     <div class="dark:text-white markdown hidden">{{ content }}</div>
 </div>
+
+
+
+<section class="bg-white dark:bg-gray-900 my-16 ">
+    <div class="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
+        <div class="mx-auto max-w-screen-md text-center">
+            <h2 class="mb-4 text-4xl tracking-tight font-extrabold leading-tight text-gray-900 dark:text-white">Tools for Developers</h2>
+            <p class="font-light text-gray-500 dark:text-gray-400 md:text-lg">We designed tools to help you deploy more apps and more often on Kubernetes.</p>
+                        
+            <div class="grid grid-cols-2 gap-2 py-8">
+              
+
+                <div class="mx-auto p-6  bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+                    
+                    <a href="{{ generator_url }}">
+                        <div class="text-xs bg-sky-600 rounded text-white px-4 py-1.5 mb-3 mx-auto text-center">Coming Soon</div>
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Apps Manifest Generator</h5>
+                    </a>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Add your application configuration and we'll create the necessary Kubernetes YAML manifest files for you. </p>
+                    <a href="{{ generator_url }}" class="inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-sky-700 rounded-lg hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800">
+                        Use it
+                        <svg aria-hidden="true" class="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    </a>
+                </div>
+                
+                
+                    <div class="mx-auto p-6  bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+                    
+                        <a href="{{ secrets_encoder_url }}">
+                            <div class="text-xs bg-emerald-500 rounded text-white px-4 py-1.5 mb-3 mx-auto text-center">In-Browser Tool</div>
+                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Secrets Encoder</h5>
+                        </a>
+                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Use our in-browser tool for generating your Kubernetes Secrets.</p>
+                        <a href="{{ secrets_encoder_url }}" class="inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-emerald-500 rounded-lg hover:bg-emerald-700 focus:ring-4 focus:outline-none focus:ring-emerald-300 dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800">
+                            Use it
+                            <svg aria-hidden="true" class="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+        </div>
+    </div>
+</section>
+
+
+
+{% include 'sponsors/main.html' with extra_class='my-16' %}
 
 {% endblock content %}

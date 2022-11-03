@@ -6,7 +6,8 @@
 
 <head>
     {% include 'base/head.html' %}
-
+    {% block meta %}{% endblock %}
+    <title>{% block head_title %}Road to Kubernetes{% endblock head_title %}</title>
 </head>
 
 <body class="bg-white dark:bg-gray-900 text-black dark:text-white" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>

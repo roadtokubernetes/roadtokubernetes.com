@@ -115,7 +115,7 @@
     <div class="hidden p-4" id="secret-encoder" role="tabpanel" aria-labelledby="secrets-tab">
         <div class='mb-3'>
             <h2 class="{{ tab_header_class }}">Secret Encoder</h2>
-            <p>Secrets must be stored as <code class="dark:text-rose-400 text-rose-600 text-left">Base64</code> values. Here's an in-browser tool (won't touch the server) to allow you to do so.</p>
+            <p>Secrets must be stored as <code class="dark:text-rose-400 text-rose-600 text-left">Base64</code> values. Here's an in-browser tool (won't touch the server) to allow you to do so. <a href="{{secrets_encoder_url }}" class="font-medium hover:text-blue-600 hover:underline dark:text-blue-500">Learn more</a>.</p>
         </div>
         <div class=" bg-gray-50 rounded-lg dark:bg-gray-800 p-3">
             {% include 'apps/snippets/base64_encoder.html' %}
