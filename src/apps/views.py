@@ -147,14 +147,14 @@ def apps_new_input_view(request, pk=None):
     return render(request, "apps/snippets/inputs.html", {})
 
 
-def apps_env_view(request, pk=None):
+def apps_env_view(request, app_id=None):
     if not request.htmx:
         return HttpResponseBadRequest()
     if not request.user.is_authenticated:
         return HttpResponse("Please login", status=400)
 
     qs = AppVariable.objects.filter(
-        app__pk=pk, app__user=request.user, type=AppVariableChoices.ENV
+        app__app_id=app_id, app__user=request.user, type=AppVariableChoices.ENV
     )
     if request.method == "POST":
         qs.delete()
@@ -184,13 +184,13 @@ def apps_env_view(request, pk=None):
     return render(request, "apps/snippets/input_datas.html", {"object_list": qs})
 
 
-def apps_secrets_view(request, pk=None):
+def apps_secrets_view(request, app_id=None):
     if not request.htmx:
         return HttpResponseBadRequest()
     if not request.user.is_authenticated:
         return HttpResponse("Please login", status=400)
     qs = AppVariable.objects.filter(
-        app__pk=pk, app__user=request.user, type=AppVariableChoices.SECRET
+        app__app_id=app_id, app__user=request.user, type=AppVariableChoices.SECRET
     )
     if request.method == "POST":
         qs.delete()
