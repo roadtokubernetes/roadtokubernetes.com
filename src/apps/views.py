@@ -7,7 +7,7 @@ from django.http import Http404, HttpResponse, HttpResponseBadRequest, JsonRespo
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.utils.text import slugify
-from django.views.generic import CreateView, ListView, UpdateView
+from django.views.generic import CreateView, ListView, UpdateView, View
 from django_htmx.http import HttpResponseClientRefresh
 
 from projects.models import Project
@@ -164,21 +164,43 @@ def apps_new_input_view(request, app_id=None, *args, **kwargs):
     return render(request, "apps/snippets/inputs.html", {})
 
 
-def apps_env_view(request, app_id=None):
-    if not request.htmx:
-        return HttpResponseBadRequest()
-    if not request.user.is_authenticated:
-        return HttpResponse("Please login", status=400)
+class AppVariableView(View):
+    type = AppVariableChoices.ENV
+    model = AppVariable
+    success_message = "Environment variables have been updated."
 
-    qs = AppVariable.objects.filter(
-        app__app_id=app_id, app__user=request.user, type=AppVariableChoices.ENV
-    )
-    if request.method == "POST":
+    def get_queryset(self):
+        return self.model.objects.filter(
+            type=self.type,
+            app__app_id=self.kwargs.get("app_id"),
+            app__user=self.request.user,
+        )
+
+    def get_app(self):
+        return App.objects.filter(
+            app_id=self.kwargs.get("app_id"),
+            project__project_id=self.request.session.get("project_id"),
+        ).first()
+
+    def get(self, request, *args, **kwargs):
+        if not request.htmx:
+            return HttpResponseBadRequest()
+        if not request.user.is_authenticated:
+            return HttpResponse("Please login", status=400)
+        qs = self.get_queryset()
+        return render(request, "apps/snippets/input_datas.html", {"object_list": qs})
+
+    def post(self, request, *args, **kwargs):
+        if not request.htmx:
+            return HttpResponseBadRequest()
+        if not request.user.is_authenticated:
+            return HttpResponse("Please login", status=400)
+        qs = self.get_queryset()
         qs.delete()
+        app = self.get_app()
         data = dict.copy(request.POST)
         keys = data.get("name")
         values = data.get("value")
-        new_vars = []
         if not isinstance(keys, list):
             keys = [keys]
         if not isinstance(values, list):
@@ -187,51 +209,28 @@ def apps_env_view(request, app_id=None):
             if len(k) == 2 and all(k):
                 _key = slugify(k[0]).replace("-", "_")
                 _key = f"{_key}".upper()
-                new_var = AppVariable.objects.create(
-                    app_id=app_id,
+                AppVariable.objects.create(
+                    app=app,
                     user=request.user,
                     key=_key,
                     value=k[1],
-                    type=AppVariableChoices.ENV,
+                    type=self.type,
                 )
-                new_vars.append(new_var.id)
-        messages.success(request, "Environment variables have been updated.")
+        messages.success(request, self.success_message)
         return HttpResponseClientRefresh()
-        # qs = AppVariable.objects.filter(id__in=new_vars)
-    return render(request, "apps/snippets/input_datas.html", {"object_list": qs})
 
 
-def apps_secrets_view(request, app_id=None):
-    if not request.htmx:
-        return HttpResponseBadRequest()
-    if not request.user.is_authenticated:
-        return HttpResponse("Please login", status=400)
-    qs = AppVariable.objects.filter(
-        app__app_id=app_id, app__user=request.user, type=AppVariableChoices.SECRET
-    )
-    if request.method == "POST":
-        qs.delete()
-        data = dict.copy(request.POST)
-        keys = data.get("name")
-        values = data.get("value")
-        new_vars = []
-        if not isinstance(keys, list):
-            keys = [keys]
-        if not isinstance(values, list):
-            values = [values]
-        for i, k in enumerate(zip(keys, values)):
-            if len(k) == 2 and all(k):
-                _key = slugify(k[0]).replace("-", "_")
-                _key = f"{_key}".upper()
-                new_var = AppVariable.objects.create(
-                    app_id=app_id,
-                    user=request.user,
-                    key=_key,
-                    value=k[1],
-                    type=AppVariableChoices.SECRET,
-                )
-                new_vars.append(new_var.id)
-        messages.success(request, "App secrets have been updated.")
-        return HttpResponseClientRefresh()
-        # qs = AppVariable.objects.filter(id__in=new_vars)
-    return render(request, "apps/snippets/input_datas.html", {"object_list": qs})
+class AppEnvView(AppVariableView):
+    type = AppVariableChoices.ENV
+    success_message = "Environment variables have been updated."
+
+
+apps_env_view = AppEnvView.as_view()
+
+
+class AppSecretView(AppVariableView):
+    type = AppVariableChoices.SECRET
+    success_message = "Secrets have been updated."
+
+
+apps_secrets_view = AppSecretView.as_view()
