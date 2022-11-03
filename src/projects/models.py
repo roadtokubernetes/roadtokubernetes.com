@@ -15,7 +15,7 @@ class Project(models.Model):
     project_id = models.SlugField(
         max_length=30, validators=[validators.valid_project_id], unique=True
     )
-    label = models.CharField(max_length=120, null=True, blank=True)
+    name = models.CharField(max_length=120, null=True, blank=True)
     description = models.TextField(blank=True, null=True)
     active = models.BooleanField(default=True)
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -36,6 +36,6 @@ class Project(models.Model):
 
     @property
     def display_label(self):
-        if self.label is not None:
-            return f"{self.label}"
+        if self.name is not None:
+            return f"{self.name}"
         return f"{self.project_id}"
