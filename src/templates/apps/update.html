@@ -36,7 +36,10 @@
             <button class="inline-block p-4 rounded-t-lg border-b-2 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="secrets-tab" data-tabs-target="#secrets" type="button" role="tab" aria-controls="secrets" aria-selected="false">Secrets</button>
         </li>
         <li class="mr-2" role="presentation">
-            <button class="inline-block p-4 rounded-t-lg border-b-2 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="secrets-tab" data-tabs-target="#secret-encoder" type="button" role="tab" aria-controls="secret-encoder" aria-selected="false">Secret Encoder</button>
+            <button class="inline-block p-4 rounded-t-lg border-b-2 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="secrets-encoder-tab" data-tabs-target="#secret-encoder" type="button" role="tab" aria-controls="secret-encoder" aria-selected="false">Secret Encoder</button>
+        </li>
+        <li class="mr-2" role="presentation">
+            <button class="inline-block p-4 rounded-t-lg border-b-2 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="raw-tab" data-tabs-target="#raw-encoder" type="button" role="tab" aria-controls="raw-encoder" aria-selected="false">Raw</button>
         </li>
         <li class="ml-auto hidden" role="presentation">
             <a href="{{ object.get_download_url }}" class="{{submit_btn_class}} inline-block">{% include 'icons/cloud-download.html' %} Download</a>
@@ -115,6 +118,16 @@
         </div>
         <div class=" bg-gray-50 rounded-lg dark:bg-gray-800 p-3">
             {% include 'apps/snippets/base64_encoder.html' %}
+        </div>
+    </div>
+
+    <div class="hidden p-4" id="raw-encoder" role="tabpanel" aria-labelledby="raw-tab">
+        <div class='mb-3'>
+            <h2 class="{{ tab_header_class }}">Raw</h2>
+            <p>Below is the raw data that makes up this app on Road to Kubernetes.</p>
+        </div>
+        <div class=" bg-gray-50 rounded-lg dark:bg-gray-800 p-3">
+            <div hx-get="{{ object.get_raw_url }}" hx-trigger="revealed"></div>
         </div>
     </div>
 </div>

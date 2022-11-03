@@ -1,10 +1,11 @@
-from statistics import quantiles
+import json
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import Http404, HttpResponse, HttpResponseBadRequest
+from django.http import Http404, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.utils.text import slugify
 from django.views.generic import CreateView, ListView, UpdateView
 from django_htmx.http import HttpResponseClientRefresh
@@ -103,8 +104,24 @@ class AppsDetailView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
 
 apps_detail_view = AppsDetailView.as_view()
 
-
 apps_detail_backup_view = AppsDetailView.as_view()
+
+
+def apps_rk8s_raw_view(request, app_id=None):
+    if not request.user.is_authenticated:
+        return HttpResponse("Please login", status=400)
+    project_id = request.session.get("project_id")
+    obj = App.objects.filter(app_id=app_id, project__project_id=project_id).first()
+    if not obj:
+        return JsonResponse({}, status=404)
+    data = obj.serialize()
+    if request.htmx:
+        data = json.dumps(data, indent=4)
+        content = render_to_string(
+            "markdown/code-block.txt", {"content": data, "lang": "json"}
+        )
+        return render(request, "markdown/markdown-block.html", {"content": content})
+    return JsonResponse(data)
 
 
 def apps_manifest_download_view(request, app_id=None):

@@ -17,6 +17,7 @@ INSTALLED_APPS = [
     "django_hosts",
     "django_htmx",
     "rangefilter",
+    "rest_framework",
     # internal
     "apps",
     "articles",

@@ -12,6 +12,7 @@ urlpatterns = [
     path("<slug:app_id>/secrets/", views.apps_secrets_view, name="secrets"),
     path("<slug:app_id>/inputs/", views.apps_new_input_view, name="inputs"),
     path("<slug:app_id>/download/", views.apps_manifest_download_view, name="download"),
+    path("<slug:app_id>/raw/", views.apps_rk8s_raw_view, name="raw"),
     path("<slug:app_id>/", views.apps_detail_view, name="detail"),
     # path("<uuid:pk>/env/", views.apps_env_view, name="env"),
     # path("<uuid:pk>/secrets/", views.apps_secrets_view, name="secrets"),

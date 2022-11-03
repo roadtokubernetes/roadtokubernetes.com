@@ -1,9 +1,11 @@
 import base64
+import json
 import uuid
 
 from django.conf import settings
 from django.db import models
 from django.db.models import F
+from django.forms.models import model_to_dict
 from django.template.loader import render_to_string
 from django.utils.text import slugify
 from django_hosts.resolvers import reverse as hosts_reverse
@@ -103,6 +105,16 @@ class App(models.Model):
             return self.name
         return self.container
 
+    def serialize(self):
+        from apps.serializers import AppRawSerializer
+
+        data = AppRawSerializer(instance=self).data
+        return data
+
+    def json(self):
+        data = self.serialize()
+        return json.dumps(data, indent=4)
+
     def get_absolute_url(self):
         if not self.app_id:
             return hosts_reverse(
@@ -129,6 +141,9 @@ class App(models.Model):
         return hosts_reverse(
             "apps:download", kwargs={"app_id": self.app_id}, host="console"
         )
+
+    def get_raw_url(self):
+        return hosts_reverse("apps:raw", kwargs={"app_id": self.app_id}, host="console")
 
     @property
     def k8s_label(self):

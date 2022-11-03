@@ -74,14 +74,19 @@ function inputToSafeMarkdown (textInput) {
     let sanitizedContent = DOMPurify.sanitize(markedContent)
     return DOMPurify.sanitize(sanitizedContent)
 }
-const markdownElements = document.getElementsByClassName('markdown')
-for (let el of markdownElements) {
-    el.innerHTML = inputToSafeMarkdown(el.innerHTML)
-    el.classList.remove('hidden')
+
+function performMarkdown(){ 
+    const markdownElements = document.getElementsByClassName('markdown')
+    for (let el of markdownElements) {
+        el.innerHTML = inputToSafeMarkdown(el.innerHTML)
+        el.classList.remove('hidden')
+        el.classList.remove('markdown')
+    }
+    if (hljs) {
+        hljs.highlightAll();
+    }
 }
-if (hljs) {
-    hljs.highlightAll();
-}
+performMarkdown()
 
 function dynamicInputElementButtonRemoval(){
     const inputElementRemoveButton = document.getElementsByClassName("input-element-container-remove-button")
@@ -111,4 +116,5 @@ function dynamicInputElementButtonRemoval(){
 dynamicInputElementButtonRemoval()
 document.body.addEventListener('htmx:afterSwap', function(evt) {
     dynamicInputElementButtonRemoval()
+    performMarkdown()
 });

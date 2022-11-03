@@ -31,7 +31,10 @@ jobs:
       GITHUB_ACTIONS: true
       DJANGO_SECRET_KEY: test-key-not-good
       DATABASE_BACKEND: postgres
-      PARENT_HOST: localhost
+      ALLOWED_HOST: .github-actions.com
+      BASE_URL: http://www.github-actions.com:8000
+      PARENT_HOST: .github-actions.com:8000
+      SESSION_DOMAIN: .github-actions.com
     services:
       postgres_main:
         image: postgres:12
@@ -59,6 +62,10 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Add hosts to /etc/hosts
+        run: |
+            sudo echo "127.0.0.1 github-actions.com" | sudo tee -a /etc/hosts
+            sudo echo "localhost github-actions.com" | sudo tee -a /etc/hosts
       - name: Install requirements
         run: |
           pip install -r requirements.txt
