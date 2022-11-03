@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.utils.text import slugify
 from django.views.generic import CreateView, ListView, UpdateView, View
-from django_htmx.http import HttpResponseClientRefresh
+from django_htmx.http import HttpResponseClientRedirect, HttpResponseClientRefresh
 
 from projects.models import Project
 
@@ -234,3 +234,17 @@ class AppSecretView(AppVariableView):
 
 
 apps_secrets_view = AppSecretView.as_view()
+
+
+def app_delete_view(request, app_id):
+    if not request.htmx:
+        return HttpResponseBadRequest()
+    if not request.user.is_authenticated:
+        return HttpResponse("Please login", status=400)
+    project_id = request.session.get("project_id")
+    obj = App.objects.filter(app_id=app_id, project__project_id=project_id).first()
+    if not obj:
+        messages.error(request, "App is missing or no longer exists.")
+        return HttpResponseClientRedirect("/apps/")
+    obj.delete()
+    return HttpResponseClientRedirect("/apps/")

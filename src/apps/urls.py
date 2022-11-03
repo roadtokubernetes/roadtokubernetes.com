@@ -8,6 +8,7 @@ urlpatterns = [
     path("create/", views.apps_create_view, name="create"),
     path("env/key/validate/", views.apps_env_validate_key, name="validate-env-key"),
     path("pk/<uuid:pk>/", views.apps_detail_backup_view, name="detail-backup"),
+    path("<slug:app_id>/delete/", views.app_delete_view, name="delete"),
     path("<slug:app_id>/env/", views.apps_env_view, name="env"),
     path("<slug:app_id>/secrets/", views.apps_secrets_view, name="secrets"),
     path("<slug:app_id>/inputs/", views.apps_new_input_view, name="inputs"),

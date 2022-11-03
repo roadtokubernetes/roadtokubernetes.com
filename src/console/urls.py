@@ -3,12 +3,15 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView, TemplateView
 
-from . import views
+from apps import views as apps_views
+
+# from . import views
 
 app_name = "console"
 
 urlpatterns = [
-    path("", views.console_view, name="index"),
+    # path("", apps_views.apps_list_view, name="index"),
+    path("", RedirectView.as_view(url="/apps/"), name="index"),
     path("apps/", include("apps.urls")),
     path("account/", include("allauth.urls")),
     path("projects/", include("projects.urls")),

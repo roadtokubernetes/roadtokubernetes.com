@@ -124,6 +124,11 @@ class App(models.Model):
             "apps:detail", kwargs={"app_id": self.app_id}, host="console"
         )
 
+    def get_delete_url(self):
+        return hosts_reverse(
+            "apps:delete", kwargs={"app_id": self.app_id}, host="console"
+        )
+
     def get_inputs_url(self):
         return hosts_reverse(
             "apps:inputs", kwargs={"app_id": self.app_id}, host="console"
