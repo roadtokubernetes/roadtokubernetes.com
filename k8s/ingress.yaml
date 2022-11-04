@@ -16,11 +16,18 @@ spec:
   tls:
     - hosts:
       - www.roadtokubernetes.com
-      - console.roadtokubernetes.com
       - a.roadtokubernetes.com
       - roadtokubernetes.com
+      - console.roadtokubernetes.com
+      - book.roadtokubernetes.com
+      - roadtok8s.com
+      - www.roadtok8s.com
+      - console.roadtok8s.com
+      - book.roadtok8s.com
       - rk8s.com
       - www.rk8s.com
+      - console.rk8s.com
+      - book.rk8s.com
       secretName: tls-www-roadtokubernetes
   rules:
   - host: www.roadtokubernetes.com
@@ -63,6 +70,16 @@ spec:
               number: 80
         path: /
         pathType: Prefix
+  - host: book.roadtokubernetes.com
+    http:
+      paths:
+      - backend:
+          service: 
+            name: www-roadtokubernetes-com-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
   - host: links.rk8s.com
     http:
       paths:
@@ -93,7 +110,57 @@ spec:
               number: 80
         path: /
         pathType: Prefix
+  - host: console.rk8s.com
+    http:
+      paths:
+      - backend:
+          service: 
+            name: www-roadtokubernetes-com-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: book.rk8s.com
+    http:
+      paths:
+      - backend:
+          service: 
+            name: www-roadtokubernetes-com-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
   - host: rk8s.com
+    http:
+      paths:
+      - backend:
+          service: 
+            name: www-roadtokubernetes-com-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: www.roadtok8s.com
+    http:
+      paths:
+      - backend:
+          service: 
+            name: www-roadtokubernetes-com-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: book.roadtok8s.com
+    http:
+      paths:
+      - backend:
+          service: 
+            name: www-roadtokubernetes-com-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: roadtok8s.com
     http:
       paths:
       - backend:

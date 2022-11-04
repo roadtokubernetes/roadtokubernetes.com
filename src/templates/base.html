@@ -13,8 +13,9 @@
 
 <body class="bg-white dark:bg-gray-900" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
-    
+    {% block navbar %}    
     {% include 'base/navbar.html' %}
+    {% endblock %}
     <div class="container mx-auto mt-4 min-h-screen">
         {% include 'base/messages.html' %}
         {% block content %}

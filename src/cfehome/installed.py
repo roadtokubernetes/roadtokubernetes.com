@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     # internal
     "apps",
     "articles",
+    "books",
     "console",
     "profiles",
     "projects",

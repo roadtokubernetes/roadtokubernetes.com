@@ -9,6 +9,7 @@ host_patterns = patterns(
     host(r"www", "cfehome.urls", name="www"),
     host(r"", "cfehome.urls", name="root"),
     host(r"console", "console.urls", name="console"),
+    host(r"book", "books.urls", name="book"),
     host(DEFAULT_ADMIN_HOST, "cfehome.hostsconfig.admin_urls", name="admin"),
     # host(r"(?!www)\w+", "cfehome.hostsconfig.redirect_urls", name="wildcard"),
     # host(r'(\w+)', settings.ROOT_URLCONF, name='wildcard'),
