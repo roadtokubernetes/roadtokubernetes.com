@@ -32,6 +32,8 @@ urlpatterns = [
     re_path(r"^sign-in/?", RedirectView.as_view(url="/account/login/")),
     re_path(r"^login/?", RedirectView.as_view(url="/account/login/")),
     re_path(r"^logout/?", RedirectView.as_view(url="/account/logout/")),
+    re_path(r"^password-reset/?", RedirectView.as_view(url="/account/password/reset/")),
+    re_path(r"^password/reset/?", RedirectView.as_view(url="/account/password/reset/")),
     path("account/", include("allauth.urls")),
     path("blog", RedirectView.as_view(url="/blog/")),
     path("blog/", include("articles.urls")),
