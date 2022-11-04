@@ -2254,6 +2254,10 @@ input:checked + .toggle-bg {
   margin-bottom: 0.25rem;
 }
 
+.mb-px {
+  margin-bottom: 1px;
+}
+
 .block {
   display: block;
 }
@@ -4165,6 +4169,10 @@ input:checked + .toggle-bg {
     width: auto;
   }
 
+  .sm\:w-screen {
+    width: 100vw;
+  }
+
   .sm\:max-w-lg {
     max-width: 32rem;
   }
@@ -4354,6 +4362,14 @@ input:checked + .toggle-bg {
 
   .md\:w-64 {
     width: 16rem;
+  }
+
+  .md\:w-full {
+    width: 100%;
+  }
+
+  .md\:w-screen {
+    width: 100vw;
   }
 
   .md\:max-w-xl {
