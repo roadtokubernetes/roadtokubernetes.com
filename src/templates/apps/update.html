@@ -4,7 +4,7 @@
 {% block content %}
 {% include 'console/page-breadcrumb.html' with list_title="Apps" list_url=apps_list_url object=object %}
 {% with "text-black dark:text-white bg-gray-200 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800" as add_button_class %}
-{% with "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" as submit_btn_class %}
+{% with "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 hover:scale-105" as submit_btn_class %}
 {% with 'text-lg font-extrabold tracking-tight leading-none text-gray-900 md:text-xl dark:text-white' as tab_header_class %}
 <div class="mb-5 ">
     <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">     
@@ -46,22 +46,27 @@
         </li>
     </ul>
 </div>
-<div id="myTabContent">
-    <div class="hidden p-4" id="manifests" role="tabpanel" aria-labelledby="manifests-tab">
-        <div class='mb-3'>
-            <div class="flex">
-                <div class="flex-grow mr-2">
-                    <h2 class="{{ tab_header_class }}">App Manifests</h2>
-                    <p>All configuration for Kubernetes for this particular app is here. This manifest file has been automatically generated based on your configuration.</p>
+<div id="myTabContent" clas="overflow-x-auto relative shadow-md sm:rounded-lg w-screen">
+    <div class="hidden w-screen p-4" id="manifests" role="tabpanel" aria-labelledby="manifests-tab">
+        <div class="w-100">
+            <div class='mb-3'>
+                <div class="flex">
+                    <div class="flex-grow mr-2">
+                        <h2 class="{{ tab_header_class }}">App Manifests</h2>
+                        <p>All configuration for Kubernetes for this particular app is here. This manifest file has been automatically generated based on your configuration.</p>
+                    </div>
+                    <div class="md:block hidden">
+                        <a href="{{ object.get_download_url }}" class="{{submit_btn_class}} hover:scale-105 inline-block">{% include 'icons/cloud-download.html' %} Download</a>
+                    </div>
                 </div>
-                <div>
-                <a href="{{ object.get_download_url }}" class="{{submit_btn_class}} inline-block">{% include 'icons/cloud-download.html' %} Download</a>
+                <div class="block md:hidden w-100 mt-2">
+                    <a href="{{ object.get_download_url }}" class="{{submit_btn_class}} hover:scale-105 inline-block">{% include 'icons/cloud-download.html' %} Download</a>
+                </div>
+                
             </div>
+            <div class=" bg-gray-50 rounded-lg dark:bg-gray-800 ">
+                {% if manifests %}<div class='markdown '>{{ manifests|safe }}</div>{% endif %}
             </div>
-            
-        </div>
-        <div class=" bg-gray-50 rounded-lg dark:bg-gray-800">
-            {% if manifests %}<div class='markdown'>{{ manifests|safe }}</div>{% endif %}
         </div>
     </div>
 

@@ -1,0 +1,32 @@
+{% url 'apps:list' as apps_list_url %}
+{% url 'projects:list' as project_list_url %}
+{% url 'projects:create' as project_create_url %}
+{% with 'underline underline-offset-2' as active_link_class %}
+<nav class="bg-gray-50 dark:bg-gray-700 block md:hidden">
+    <div class="py-3 px-4 mx-auto max-w-screen-xl md:px-6">
+        <div class="flex items-center">
+            <ul class="flex flex-row mt-0 mr-6 space-x-8 text-sm font-medium">
+                <li>
+                    <a href="{{ apps_list_url }}" class="text-gray-900 dark:text-white hover:underline">Apps</a>
+                </li>
+                <li>
+                    <a href="{{ project_list_url }}" class="text-gray-900 dark:text-white hover:underline">Projects</a>
+                </li>
+
+               
+            </ul>
+            {% if request.session.project_id %}
+                <button hx-get="{{ projects_choices_url }}" hx-trigger="click" hx-target="#submenu-project-dropdown" data-dropdown-toggle="submenu-project-dropdown" class="text-gray-600 text-sm dark:text-gray-300 ml-auto">{{ request.session.project_id }}</button>
+
+              
+
+                <div id="submenu-project-dropdown" class="hidden  border mr-4 z-10 w-5/6 p-3 bg-gray-50 dark:bg-gray-700 rounded divide-y divide-gray-100 shadow">
+                    {% include 'projects/snippets/project_choices.html' %}
+                </div>
+            {% endif %}
+            
+        </div>
+        
+    </div>
+</nav>
+{% endwith %}

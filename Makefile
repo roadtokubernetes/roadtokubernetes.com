@@ -50,6 +50,8 @@ k8s_apply:
 act_build_container:
 	act workflow_dispatch -W .github/workflows/build-container.yaml --secret-file .secrets -v
 
+rollout:
+	kubectl rollout restart deployment/www-roadtokubernetes-com-deployment
 
 # act  workflow_dispatch -W .github/workflows/build-container.yaml  --secret-file .secrets -v
 

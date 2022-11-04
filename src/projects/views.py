@@ -21,6 +21,7 @@ def projects_choices_view(request):
         return render(request, "hx/login-required.html", status=400)
     queryset = Project.objects.filter(user=request.user)
     label_hide = request.GET.get("label_hide") == "true"
+    print(label_hide)
     if request.method == "POST":
         if "project_id" in request.POST:
             """
