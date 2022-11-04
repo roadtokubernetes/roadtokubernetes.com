@@ -4,7 +4,7 @@
 {% load i18n %}
 {% load account socialaccount %}
 
-{% block head_title %}{% trans "Login" %} to your account on {{ block.super }}{% endblock %}
+{% block head_title %}{% trans "Login" %} / {{ block.super }}{% endblock %}
 
 {% block content %}
 
@@ -29,11 +29,11 @@
 {% endif %}
 
 
-<section class="bg-gray-50 dark:bg-gray-900">
-  <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+<section class="bg-gray-50 dark:bg-gray-900 md:h-screen">
+  <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-full lg:py-0">
       <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
          
-          <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+          <div class="p-6 space-y-4 md:space-y-6 sm:p-8 ">
             {% if form.errors %}
               <div class="alert mb-4">
                   <div class="border border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700"> 
@@ -76,9 +76,7 @@
                   <p class="text-sm font-light text-gray-500 dark:text-gray-400">
                       Don’t have an account yet? <a href="{% url 'account_signup' %}" class="font-medium text-sky-600 hover:underline dark:text-sky-500">Sign up</a>
                   </p>
-                  <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-                    <a href="{% url 'account_reset_password' %}" class="text-sm font-medium text-sky-600 hover:underline dark:text-sky-500">Forgot password?</a>
-                  </p>
+                  {% include 'account/forget-password-p.html' %}
               </form>
           </div>
       </div>
