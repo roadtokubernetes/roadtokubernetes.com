@@ -120,6 +120,7 @@ def get_ingress_manifest(
         "rules": ingress_rules,
     }
     if tls_secret_name is not None:
-        spec["tls"] = tls_secret_name
+        data = {"secretName": tls_secret_name, "hosts": hosts}
+        spec["tls"] = data
     template_data["spec"] = spec
     return yaml_loader.dump(template_data).strip()
