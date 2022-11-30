@@ -6,11 +6,11 @@ vendor_files:
 	mkdir -p src/static/vendor/showdown/
 	mkdir -p src/static/vendor/htmx/
 	curl -L https://unpkg.com/htmx.org@1.8.2 -o ./src/static/vendor/htmx/htmx.min.js
-	cp -R node_modules/dompurify/dist/ ./src/static/vendor/dompurify/
+	cp node_modules/dompurify/dist/purify.min.js ./src/static/vendor/dompurify/purify.min.js
 	curl https://unpkg.com/@highlightjs/cdn-assets@11.6.0/highlight.min.js -o src/static/vendor/highlight/highlight.min.js
 	cp node_modules/highlight.js/styles/monokai-sublime.css ./src/static/vendor/highlight/monokai-sublime.min.css
-	cp -R node_modules/flowbite/dist/ ./src/static/vendor/flowbite/
-	cp -R node_modules/showdown/dist/ ./src/static/vendor/showdown/
+	cp node_modules/flowbite/dist/flowbite.js ./src/static/vendor/flowbite/flowbite.js
+	cp node_modules/showdown/dist/showdown.min.js ./src/static/vendor/showdown/showdown.min.js
 
 tailwind_watch:
 	npx tailwindcss -i ./src/static/src/tailwind-input.css -o ./src/static/src/tailwind-output.css --watch
