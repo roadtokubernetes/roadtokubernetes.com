@@ -27,6 +27,13 @@ class DatabaseChoices(models.TextChoices):
     __empty__ = "Select database"
 
 
+class EnableCertificateIssuerChoices(models.IntegerChoices):
+    ENABLE = 1, "Enable"
+    DISABLE = 0, "Disable"
+
+    __empty__ = "Select to enable cert-manager issuer:"
+
+
 class ExternalIngressChoices(models.IntegerChoices):
     ENABLE = 1, "Enable"
     DISABLE = 0, "Disable"
@@ -77,6 +84,13 @@ class App(models.Model):
         blank=True,
     )
     tls_secret_name = models.CharField(max_length=120, null=True, blank=True)
+    certificate_issuer = models.IntegerField(
+        choices=EnableCertificateIssuerChoices.choices,
+        default=EnableCertificateIssuerChoices.DISABLE,
+        null=True,
+        blank=True,
+    )
+    certificate_email = models.EmailField(null=True, blank=True)
     custom_domain_names = models.TextField(
         null=True, blank=True, help_text="Separate domains by comma"
     )
@@ -154,6 +168,11 @@ class App(models.Model):
     def get_raw_url(self):
         return hosts_reverse("apps:raw", kwargs={"app_id": self.app_id}, host="console")
 
+    def get_certificate_issuer(self):
+        if self.certificate_issuer_allowed:
+            return self.certificate_issuer_label
+        return None
+
     @property
     def k8s_label(self):
         return slugify(f"{self.title}")
@@ -189,6 +208,16 @@ class App(models.Model):
     @property
     def secrets_label(self):
         return f"{self.k8s_label}-secret"
+
+    @property
+    def certificate_issuer_label(self):
+        return f"{self.k8s_label}-issuer"
+
+    @property
+    def tls_secret_label(self):
+        if self.tls_secret_name:
+            return self.tls_secret_name
+        return f"{self.k8s_label}-tls-secret"
 
     @property
     def has_database(self):
@@ -249,6 +278,18 @@ class App(models.Model):
             "ports": self.get_container_ports(),
         }
 
+    @property
+    def internet_ingress_allowed(self):
+        return self.allow_internet_traffic == ExternalIngressChoices.ENABLE
+
+    @property
+    def certificate_issuer_allowed(self):
+        return (
+            self.certificate_issuer == EnableCertificateIssuerChoices.ENABLE
+            and self.internet_ingress_allowed
+            and self.certificate_email is not None
+        )
+
     def get_manifests(self, as_dict=False):
         secrets_data, secrets_exist = self.get_secret_variables()
         container_secrets = []
@@ -283,7 +324,7 @@ class App(models.Model):
         )
         manifest_docs = [namespace_yaml, deployment_yaml, service_yaml]
         ingress_yaml = None
-        if self.allow_internet_traffic:
+        if self.internet_ingress_allowed:
             domains = self.get_domain_names()
             ingress_yaml = renderers.get_ingress_manifest(
                 domains=domains,
@@ -291,7 +332,8 @@ class App(models.Model):
                 name=self.ingress_label,
                 service_name=self.service_label,
                 service_port=self.service_port,
-                tls_secret_name=self.tls_secret_name,
+                cert_issuer=self.get_certificate_issuer(),
+                tls_secret_name=self.tls_secret_label,
             )
             manifest_docs.append(ingress_yaml)
 
@@ -303,7 +345,15 @@ class App(models.Model):
                 data=secrets_data,
             )
             manifest_docs.append(secret_yaml)
-
+        issuer_yaml = ""
+        if self.certificate_issuer_allowed:
+            issuer_yaml = renderers.get_certificate_issuer(
+                name=self.certificate_issuer_label,
+                private_secret_name=self.tls_secret_label,
+                namespace=self._namespace,
+                email=self.certificate_email,
+            )
+            manifest_docs.append(issuer_yaml)
         if as_dict:
             manifest_data = {
                 "namespace": yaml_loader.load(namespace_yaml),
@@ -314,6 +364,8 @@ class App(models.Model):
                 manifest_data["ingress"] = yaml_loader.load(ingress_yaml)
             if secrets_exist:
                 manifest_data["secret"] = yaml_loader.load(secret_yaml)
+            if self.certificate_issuer_allowed:
+                manifest_data["issuer"] = yaml_loader.load(issuer_yaml)
             return manifest_data
         doc = "\n\n---\n".join(manifest_docs)
         return doc.strip()

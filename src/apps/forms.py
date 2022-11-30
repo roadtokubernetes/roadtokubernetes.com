@@ -3,7 +3,12 @@ from django.conf import settings
 from django.utils.text import slugify
 
 from . import validators
-from .models import App, DatabaseChoices, ExternalIngressChoices
+from .models import (
+    App,
+    DatabaseChoices,
+    EnableCertificateIssuerChoices,
+    ExternalIngressChoices,
+)
 
 BASE_URL = settings.BASE_URL
 DB_CHOICES = DatabaseChoices.choices
@@ -13,7 +18,8 @@ EXTERNAL_TRAFFIC_CHOICES = ExternalIngressChoices.choices
 
 class AppModelForm(forms.ModelForm):
     container = forms.CharField(
-        initial="nginx",
+        label="Container Image",
+        initial="nginx:latest",
         help_text="Since Kubernetes runs containers, this is where we must start.",
     )
     container_port = forms.CharField(initial="8000", required=True)
@@ -120,18 +126,36 @@ class AppModelUpdateForm(AppModelForm):
             # "database",
             "allow_internet_traffic",
             "custom_domain_names",
+            "certificate_issuer",
+            "certificate_email",
             "tls_secret_name",
         ]
-        labels = {"tls_secret_name": "TLS Secret Name"}
+        labels = {
+            "tls_secret_name": "TLS Secret Name",
+        }
         help_texts = {
-            "container": "Only public images are supported at this time",
+            "container": "Only public images are supported for this manifest generator at this time",
             "image_pull_policy": "Select how often kubernetes should pull this image. Default: Always",
             "replicas": "Number of times Kubernetes should have this running.",
             "tls_secret_name": f"TLS secret name for generating the TLS certs. <a class='underline text-blue-700' href='{BASE_URL}/blog/tls'>Learn more</a>",
             "app_id": "The app id that will be used in the URL. It is auto-generated from the app name.",
+            "certificate_issuer": "Create manifest for cert-manager to provision TLS certificates for your app.",
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["image_pull_policy"].widget.attrs.update({"class": "mb-0"})
+        self.fields["certificate_issuer"].widget.attrs.update({"class": "mb-0"})
         self.fields["app_id"].widget.attrs.update({"readonly": True, "disabled": True})
+
+    def clean(self):
+        data = self.cleaned_data
+        if data.get(
+            "certificate_issuer"
+        ) == EnableCertificateIssuerChoices.ENABLE and not data.get(
+            "certificate_email"
+        ):
+            self.add_error(
+                "certificate_email", "Email is required for certificate issuer"
+            )
+        return data

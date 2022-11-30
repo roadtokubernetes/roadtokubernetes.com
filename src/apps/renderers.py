@@ -63,6 +63,28 @@ def get_secrets_manifest(name="secret", namespace="default", data={}):
     return yaml_loader.dump(_data).strip()
 
 
+def get_certificate_issuer(
+    name="cert-issuer-prod",
+    private_secret_name="cert-issuer-secret",
+    namespace="default",
+    email="",
+):
+    _data = {
+        "apiVersion": "cert-manager.io/v1",
+        "kind": "Issuer",
+        "metadata": {"name": name, "namespace": namespace},
+        "spec": {
+            "acme": {
+                "server": "https://acme-v02.api.letsencrypt.org/directory",
+                "email": email,
+                "privateKeySecretRef": {"name": private_secret_name},
+                "solvers": [{"http01": {"ingress": {"class": "nginx"}}}],
+            }
+        },
+    }
+    return yaml_loader.dump(_data).strip()
+
+
 def get_ingress_manifest(
     domains=[],
     namespace="default",
@@ -70,10 +92,15 @@ def get_ingress_manifest(
     service_name="service",
     tls_secret_name=None,
     service_port=80,
+    cert_issuer=None,
 ):
     ingress_doc = render_to_string("manifests/ingress-insecure.yaml")
     template_data = yaml_loader.load(ingress_doc)
     template_data["metadata"].update({"namespace": namespace, "name": name})
+    if cert_issuer is not None:
+        template_data["metadata"]["annotations"].update(
+            {"cert-manager.io/issuer": cert_issuer}
+        )
     hosts = [x for x in domains]
     ingress_rules = []
     spec = {}
